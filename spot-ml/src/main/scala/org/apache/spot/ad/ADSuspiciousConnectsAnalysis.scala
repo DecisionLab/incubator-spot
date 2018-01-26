@@ -93,6 +93,7 @@ object ADSuspiciousConnectsAnalysis {
 //        .na.fill(DefaultQueryType, Seq(App))
 //        .na.fill(DefaultQueryResponseCode, Seq(DVCDomain))
 //
+      val suspiciousRecords = ADSimplisticAnomalyDetector.suspiciousPreAuthRecords(inputADRecords)
 //      logger.info("Fitting probabilistic model to data")
 //      val model =
 //        ADSuspiciousConnectsModel.trainModel(sparkSession, logger, config, adRecords)
@@ -113,6 +114,7 @@ object ADSuspiciousConnectsAnalysis {
 //      val invalidADRecords = filterInvalidRecords(inputADRecords).select(InSchema: _*)
 
 //      Option(SuspiciousConnectsAnalysisResults(outputADRecords, invalidADRecords))
+      suspiciousRecords.show(20, truncate = false)
       None
     }
   }

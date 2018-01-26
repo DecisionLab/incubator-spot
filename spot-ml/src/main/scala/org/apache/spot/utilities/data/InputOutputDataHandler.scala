@@ -17,11 +17,11 @@
 
 package org.apache.spot.utilities.data
 
+import com.databricks.spark.avro._
 import org.apache.hadoop.fs.{FileSystem, LocatedFileStatus, Path, RemoteIterator, FileUtil => fileUtil}
 import org.apache.log4j.Logger
-import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 /**
   * Handles input and output data for every data set or pipep line implementation.
@@ -37,11 +37,14 @@ object InputOutputDataHandler {
     * @return raw data frame.
     */
   def getInputDataFrame(sparkSession: SparkSession, inputPath: String, logger: Logger): Option[DataFrame] = {
+
     try {
       logger.info("Loading data from: " + inputPath)
-      Some(sparkSession.read.parquet(inputPath))
+        Some(sparkSession.read.avro(inputPath))
     } catch {
-      case _: Throwable => None
+      case throwable: Throwable =>
+        logger.error(s"Failed to read data due to: $throwable")
+        None
     }
   }
 

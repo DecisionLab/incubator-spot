@@ -29,7 +29,7 @@ object SuspiciousConnectsArgumentParser {
 
     head("LDA Process", "1.1")
 
-    opt[String]("analysis").required().valueName("< flow | proxy | dns >").
+    opt[String]("analysis").required().valueName("< flow | proxy | dns | ad >").
       action((x, c) => c.copy(analysis = x)).
       text("choice of suspicious connections analysis to perform")
 

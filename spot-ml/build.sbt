@@ -32,6 +32,7 @@ libraryDependencies += "org.apache.spark" %% "spark-mllib" % sparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-sql" % sparkVersion % "provided"
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.6"
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.5.0"
+libraryDependencies += "com.databricks" %% "spark-avro" % "4.0.0"
 
 resolvers += Resolver.sonatypeRepo("public")
 

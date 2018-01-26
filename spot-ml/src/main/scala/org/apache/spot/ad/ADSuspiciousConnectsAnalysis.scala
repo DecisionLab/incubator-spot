@@ -28,7 +28,7 @@ import org.apache.spot.utilities.data.validation.InputSchema.InputSchemaValidati
 import org.apache.spot.utilities.data.validation.{InputSchema, InvalidDataHandler => dataValidation}
 
 /**
-  * The suspicious connections analysis of DNS log data develops a probabilistic model the DNS queries
+  * The suspicious connections analysis of AD log data develops a probabilistic model the AD queries
   * made by each client IP and flags those assigned a low probability as "suspicious"
   */
 
@@ -67,7 +67,7 @@ object ADSuspiciousConnectsAnalysis {
       EndTimeField)).fieldNames.map(col)
 
   /**
-    * Run suspicious connections analysis on DNS log data.
+    * Run suspicious connections analysis on AD log data.
     * Saves the most suspicious connections to a CSV file on HDFS.
     *
     * @param config Object encapsulating runtime parameters and CLI options.
@@ -75,19 +75,19 @@ object ADSuspiciousConnectsAnalysis {
     * @param logger
     */
   def run(config: SuspiciousConnectsConfig, sparkSession: SparkSession, logger: Logger,
-          inputDNSRecords: DataFrame): Option[SuspiciousConnectsAnalysisResults] = {
+          inputADRecords: DataFrame): Option[SuspiciousConnectsAnalysisResults] = {
 
 
-    logger.info("Starting DNS suspicious connects analysis.")
+    logger.info("Starting AD suspicious connects analysis.")
 
     logger.info("Validating schema...")
-    val InputSchemaValidationResponse(isValid, errorMessages) = validateSchema(inputDNSRecords)
+    val InputSchemaValidationResponse(isValid, errorMessages) = validateSchema(inputADRecords)
 
     if (!isValid) {
       errorMessages.foreach(logger.error(_))
       None
     } else {
-      val adRecords = filterRecords(inputDNSRecords)
+      val adRecords = filterRecords(inputADRecords)
         .select(InSchema: _*)
 //        .na.fill(DefaultQueryClass, Seq(Action))
 //        .na.fill(DefaultQueryType, Seq(App))
@@ -95,24 +95,24 @@ object ADSuspiciousConnectsAnalysis {
 //
 //      logger.info("Fitting probabilistic model to data")
 //      val model =
-//        DNSSuspiciousConnectsModel.trainModel(sparkSession, logger, config, adRecords)
+//        ADSuspiciousConnectsModel.trainModel(sparkSession, logger, config, adRecords)
 //
 //      logger.info("Identifying outliers")
-//      val scoredDNSRecords = model.score(sparkSession, adRecords, config.userDomain, config.precisionUtility)
+//      val scoredADRecords = model.score(sparkSession, adRecords, config.userDomain, config.precisionUtility)
 //
-//      val filteredScored = filterScoredRecords(scoredDNSRecords, config.threshold)
+//      val filteredScored = filterScoredRecords(scoredADRecords, config.threshold)
 //
-//      val orderedDNSRecords = filteredScored.orderBy(Score)
+//      val orderedADRecords = filteredScored.orderBy(Score)
 //
-//      val mostSuspiciousDNSRecords =
-//        if (config.maxResults > 0) orderedDNSRecords.limit(config.maxResults)
-//        else orderedDNSRecords
+//      val mostSuspiciousADRecords =
+//        if (config.maxResults > 0) orderedADRecords.limit(config.maxResults)
+//        else orderedADRecords
 //
-//      val outputDNSRecords = mostSuspiciousDNSRecords.select(OutSchema: _*)
+//      val outputADRecords = mostSuspiciousADRecords.select(OutSchema: _*)
 //
-//      val invalidDNSRecords = filterInvalidRecords(inputDNSRecords).select(InSchema: _*)
+//      val invalidADRecords = filterInvalidRecords(inputADRecords).select(InSchema: _*)
 
-//      Option(SuspiciousConnectsAnalysisResults(outputDNSRecords, invalidDNSRecords))
+//      Option(SuspiciousConnectsAnalysisResults(outputADRecords, invalidADRecords))
       None
     }
   }
@@ -149,57 +149,57 @@ object ADSuspiciousConnectsAnalysis {
 
 //  /**
 //    *
-//    * @param inputDNSRecords raw DNS records.
+//    * @param inputADRecords raw AD records.
 //    * @return
 //    */
-//  def filterInvalidRecords(inputDNSRecords: DataFrame): DataFrame = {
+//  def filterInvalidRecords(inputADRecords: DataFrame): DataFrame = {
 //
-//    val invalidDNSRecordsFilter = inputDNSRecords(TimeStamp).isNull ||
-//      inputDNSRecords(TimeStamp).equalTo("") ||
-//      inputDNSRecords(TimeStamp).equalTo("-") ||
-//      inputDNSRecords(UnixTimeStamp).isNull ||
-//      inputDNSRecords(DestinationIPv4).isNull ||
-//      inputDNSRecords(Category).isNull ||
-//      inputDNSRecords(Category).equalTo("") ||
-//      inputDNSRecords(Category).equalTo("-") ||
-//      inputDNSRecords(Category).equalTo("(empty)") ||
-//      inputDNSRecords(BeginTime).isNull ||
-//      inputDNSRecords(BeginTime).equalTo("") ||
-//      inputDNSRecords(BeginTime).equalTo("-") ||
-//      ((inputDNSRecords(Action).isNull ||
-//        inputDNSRecords(Action).equalTo("") ||
-//        inputDNSRecords(Action).equalTo("-")) &&
-//        inputDNSRecords(App).isNull &&
-//        inputDNSRecords(DVCDomain).isNull)
+//    val invalidADRecordsFilter = inputADRecords(TimeStamp).isNull ||
+//      inputADRecords(TimeStamp).equalTo("") ||
+//      inputADRecords(TimeStamp).equalTo("-") ||
+//      inputADRecords(UnixTimeStamp).isNull ||
+//      inputADRecords(DestinationIPv4).isNull ||
+//      inputADRecords(Category).isNull ||
+//      inputADRecords(Category).equalTo("") ||
+//      inputADRecords(Category).equalTo("-") ||
+//      inputADRecords(Category).equalTo("(empty)") ||
+//      inputADRecords(BeginTime).isNull ||
+//      inputADRecords(BeginTime).equalTo("") ||
+//      inputADRecords(BeginTime).equalTo("-") ||
+//      ((inputADRecords(Action).isNull ||
+//        inputADRecords(Action).equalTo("") ||
+//        inputADRecords(Action).equalTo("-")) &&
+//        inputADRecords(App).isNull &&
+//        inputADRecords(DVCDomain).isNull)
 //
-//    inputDNSRecords
-//      .filter(invalidDNSRecordsFilter)
+//    inputADRecords
+//      .filter(invalidADRecordsFilter)
 //  }
 
 //  /**
 //    *
-//    * @param scoredDNSRecords scored DNS records.
+//    * @param scoredADRecords scored AD records.
 //    * @param threshold        score tolerance.
 //    * @return
 //    */
-//  def filterScoredRecords(scoredDNSRecords: DataFrame, threshold: Double): DataFrame = {
+//  def filterScoredRecords(scoredADRecords: DataFrame, threshold: Double): DataFrame = {
 //
 //
-//    val filteredDNSRecordsFilter = scoredDNSRecords(Score).leq(threshold) &&
-//      scoredDNSRecords(Score).gt(dataValidation.ScoreError)
+//    val filteredADRecordsFilter = scoredADRecords(Score).leq(threshold) &&
+//      scoredADRecords(Score).gt(dataValidation.ScoreError)
 //
-//    scoredDNSRecords.filter(filteredDNSRecordsFilter)
+//    scoredADRecords.filter(filteredADRecordsFilter)
 //  }
 
   /**
     * Validates incoming data matches required schema for model training and scoring.
     *
-    * @param inputDNSRecords incoming data frame
+    * @param inputADRecords incoming data frame
     * @return
     */
-  def validateSchema(inputDNSRecords: DataFrame): InputSchemaValidationResponse = {
+  def validateSchema(inputADRecords: DataFrame): InputSchemaValidationResponse = {
 
-    InputSchema.validate(inputDNSRecords.schema, ADSuspiciousConnectsAnalysis.InStructType)
+    InputSchema.validate(inputADRecords.schema, ADSuspiciousConnectsAnalysis.InStructType)
 
   }
 

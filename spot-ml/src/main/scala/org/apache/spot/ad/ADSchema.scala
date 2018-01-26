@@ -53,16 +53,16 @@ object ADSchema {
   val App = "app"
   val AppField = StructField(App, StringType, nullable= true)
 
+  val Action = "action"
+  val ActionField = StructField(Action, StringType, nullable= true)
+
 
   val BeginTime = "begintime"
-  val BeginTimeField = StructField(BeginTime, DateType, nullable= true)
+  val BeginTimeField = StructField(BeginTime, LongType, nullable= true)
 
   val EndTime = "endtime"
-  val EndTimeField = StructField(EndTime, DateType, nullable= true)
+  val EndTimeField = StructField(EndTime, LongType, nullable= true)
 
-
-  val Action = "action"
-  val ActionField = StructField(Action, IntegerType, nullable= true)
 
   val SourcePort = "src_port"
   val SourcePortField = StructField(SourcePort, IntegerType, nullable= true)

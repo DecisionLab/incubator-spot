@@ -24,7 +24,6 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spot.SuspiciousConnects.SuspiciousConnectsAnalysisResults
 import org.apache.spot.SuspiciousConnectsArgumentParser.SuspiciousConnectsConfig
 import org.apache.spot.ad.ADSchema._
-import org.apache.spot.dns.DNSSuspiciousConnectsAnalysis.{InSchema, filterInvalidRecords}
 import org.apache.spot.utilities.data.validation.InputSchema.InputSchemaValidationResponse
 import org.apache.spot.utilities.data.validation.{InputSchema, InvalidDataHandler => dataValidation}
 

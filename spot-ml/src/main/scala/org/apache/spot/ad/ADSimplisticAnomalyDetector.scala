@@ -4,7 +4,7 @@ import java.util.Date
 
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.functions.{count, udf, desc, col}
+import org.apache.spark.sql.functions.{count, udf, desc, col, lit}
 
 object ADSimplisticAnomalyDetector {
 
@@ -14,9 +14,9 @@ object ADSimplisticAnomalyDetector {
       .withColumn(ADSchema.BeginTime, udfUppercase(inputRecords(ADSchema.BeginTime)))
       .groupBy(ADSchema.BeginTime, ADSchema.UserID)
       .agg(count("*").alias("total"))
-      .where(col("total") >= 3)
+      .where(col("total") >= 50)
       .orderBy(desc("total"))
-
+      .withColumn("score", lit(1.0))
   }
 
   def udfUppercase:UserDefinedFunction = udf((timestamp: Long) => convert(timestamp))

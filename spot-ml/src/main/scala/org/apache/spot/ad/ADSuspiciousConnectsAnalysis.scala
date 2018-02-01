@@ -24,6 +24,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spot.SuspiciousConnects.SuspiciousConnectsAnalysisResults
 import org.apache.spot.SuspiciousConnectsArgumentParser.SuspiciousConnectsConfig
 import org.apache.spot.ad.ADSchema._
+import org.apache.spot.dns.DNSSuspiciousConnectsAnalysis.{InSchema, filterInvalidRecords}
 import org.apache.spot.utilities.data.validation.InputSchema.InputSchemaValidationResponse
 import org.apache.spot.utilities.data.validation.{InputSchema, InvalidDataHandler => dataValidation}
 
@@ -114,8 +115,9 @@ object ADSuspiciousConnectsAnalysis {
 //      val invalidADRecords = filterInvalidRecords(inputADRecords).select(InSchema: _*)
 
 //      Option(SuspiciousConnectsAnalysisResults(outputADRecords, invalidADRecords))
-      suspiciousRecords.show(20, truncate = false)
-      None
+//      val invalidADRecords = filterInvalidRecords(suspiciousRecords).select(InSchema: _*)
+      val invalidADRecords = filterInvalidRecords(suspiciousRecords)
+      Some(SuspiciousConnectsAnalysisResults(suspiciousRecords, invalidADRecords))
     }
   }
 
@@ -149,34 +151,14 @@ object ADSuspiciousConnectsAnalysis {
       .filter(cleanADRecordsFilter)
   }
 
-//  /**
-//    *
-//    * @param inputADRecords raw AD records.
-//    * @return
-//    */
-//  def filterInvalidRecords(inputADRecords: DataFrame): DataFrame = {
-//
-//    val invalidADRecordsFilter = inputADRecords(TimeStamp).isNull ||
-//      inputADRecords(TimeStamp).equalTo("") ||
-//      inputADRecords(TimeStamp).equalTo("-") ||
-//      inputADRecords(UnixTimeStamp).isNull ||
-//      inputADRecords(DestinationIPv4).isNull ||
-//      inputADRecords(Category).isNull ||
-//      inputADRecords(Category).equalTo("") ||
-//      inputADRecords(Category).equalTo("-") ||
-//      inputADRecords(Category).equalTo("(empty)") ||
-//      inputADRecords(BeginTime).isNull ||
-//      inputADRecords(BeginTime).equalTo("") ||
-//      inputADRecords(BeginTime).equalTo("-") ||
-//      ((inputADRecords(Action).isNull ||
-//        inputADRecords(Action).equalTo("") ||
-//        inputADRecords(Action).equalTo("-")) &&
-//        inputADRecords(App).isNull &&
-//        inputADRecords(DVCDomain).isNull)
-//
-//    inputADRecords
-//      .filter(invalidADRecordsFilter)
-//  }
+  /**
+    *
+    * @param inputADRecords raw AD records.
+    * @return
+    */
+  def filterInvalidRecords(inputADRecords: DataFrame): DataFrame = {
+    inputADRecords.filter(inputADRecords(ADSchema.UserID).isNull)
+  }
 
 //  /**
 //    *

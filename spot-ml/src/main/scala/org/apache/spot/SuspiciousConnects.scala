@@ -104,6 +104,8 @@ object SuspiciousConnects {
                 .mergeResultsFileUtil(sparkSession, config.hdfsScoredConnect, analysis, logger)
               case "dns" => InputOutputDataHandler
                 .mergeResultsFileUtil(sparkSession, config.hdfsScoredConnect, analysis, logger)
+              case "ad" => InputOutputDataHandler
+                .mergeResultsFileUtil(sparkSession, config.hdfsScoredConnect, analysis, logger)
               case "proxy" => InputOutputDataHandler
                 .mergeResultsFileSystem(sparkSession, config.hdfsScoredConnect, analysis, logger)
             }

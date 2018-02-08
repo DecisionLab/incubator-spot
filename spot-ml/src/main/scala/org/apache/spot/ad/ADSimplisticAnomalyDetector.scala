@@ -4,23 +4,24 @@ import java.util.Date
 
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.functions.{count, udf, desc, col, lit}
+import org.apache.spark.sql.functions.{count, udf, desc, col}
 
 object ADSimplisticAnomalyDetector {
 
   val KERBERBOS_PRE_AUTH_FAILURE_CODE = "263047710"
 
   def suspiciousPreAuthRecords(inputRecords: DataFrame): DataFrame = {
-    inputRecords.filter(col(ADSchema.UserID).isNotNull)
+    val pre_auth_records = inputRecords.filter(col(ADSchema.UserID).isNotNull)
       .filter(col(ADSchema.Code) === KERBERBOS_PRE_AUTH_FAILURE_CODE)
-      .select(ADSchema.Code, ADSchema.Type, ADSchema.UserID, ADSchema.BeginTime)
+
+    val scores = pre_auth_records.select(ADSchema.Code, ADSchema.Type, ADSchema.UserID, ADSchema.BeginTime)
       .withColumn(ADSchema.BeginTime, udfUppercase(inputRecords(ADSchema.BeginTime)))
       .groupBy(ADSchema.BeginTime, ADSchema.UserID)
-      .agg(count("*").alias("total"))
-      .where(col("total") >= 3)
-      .orderBy(desc("total"))
-      .withColumn("score", lit(1.0))
-      .withColumn(ADSchema.Code, lit(KERBERBOS_PRE_AUTH_FAILURE_CODE))
+      .agg(count("*").alias("score"))     // treat the total as a score value
+      .where(col("score") >= 3)
+      .orderBy(desc("score"))
+
+    pre_auth_records.join(scores, ADSchema.UserID)
   }
 
   def udfUppercase:UserDefinedFunction = udf((timestamp: Long) => convert(timestamp))

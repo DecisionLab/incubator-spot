@@ -95,7 +95,7 @@ spark2-submit --class "org.apache.spot.SuspiciousConnects" \
   --conf spark.yarn.am.memoryOverhead=${SPK_DRIVER_MEM_OVERHEAD} \
   --conf spark.yarn.executor.memoryOverhead=${SPK_EXEC_MEM_OVERHEAD} /home/avanadio/spot-ml-assembly-1.1.jar \
   --analysis ${DSOURCE} \
-  --input "/user/spot/odm/event/p_dvc_vendor=Microsoft_AD/p_dvc_type=McAfee_SIEM/p_dt=2018-01-05-23/"  \
+  --input "/user/spot/odm/event/p_dvc_vendor=Microsoft_AD/p_dvc_type=McAfee_SIEM/"  \
   --dupfactor ${DUPFACTOR} \
   --feedback ${FEEDBACK_PATH} \
   --ldatopiccount ${TOPIC_COUNT} \

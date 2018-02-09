@@ -15,8 +15,8 @@ object ADSimplisticAnomalyDetector {
       .filter(col(ADSchema.Code) === KERBERBOS_PRE_AUTH_FAILURE_CODE)
 
     val scores = pre_auth_records.select(ADSchema.Code, ADSchema.Type, ADSchema.UserID, ADSchema.BeginTime)
-      .withColumn(ADSchema.BeginTime, udfUppercase(inputRecords(ADSchema.BeginTime)))
-      .groupBy(ADSchema.BeginTime, ADSchema.UserID)
+      .withColumn("date_day", udfUppercase(inputRecords(ADSchema.BeginTime)))
+      .groupBy("date_day", ADSchema.UserID)
       .agg(count("*").alias("score"))     // treat the total as a score value
       .where(col("score") >= 3)
       .orderBy(desc("score"))

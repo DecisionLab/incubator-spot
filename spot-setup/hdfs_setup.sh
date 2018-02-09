@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-DSOURCES=('flow' 'dns' 'proxy')
+DSOURCES=('flow' 'dns' 'proxy' 'ad')
 DFOLDERS=('binary' 
 'stage'
 'hive'

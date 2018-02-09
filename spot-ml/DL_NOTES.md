@@ -6,3 +6,6 @@
 # DEPLOYMENT
 1. when running /opt/spot/incubator-spot/spot-oa/runIpython.sh it errors due to lacking env var ACCESS_CONTROL_ALLOW_ORIGIN
    Export manually (set to '*') since we have no clue why it's not there... sadface
+
+# Sample Data
+https://issues.apache.org/jira/browse/SPOT-135?jql=project%20%3D%20SPOT

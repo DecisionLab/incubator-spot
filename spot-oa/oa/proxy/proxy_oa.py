@@ -61,7 +61,7 @@ class OA(object):
         self._proxy_scores = []
         self._proxy_scores_headers = []
         self._proxy_extra_columns = []
-        self._results_delimiter = '\t'
+        self._results_delimiter = ','
 
         # get app configuration.
         self._spot_conf = Util.get_spot_conf()

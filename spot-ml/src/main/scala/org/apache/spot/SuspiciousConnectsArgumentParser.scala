@@ -107,7 +107,7 @@ object SuspiciousConnectsArgumentParser {
                                       hdfsScoredConnect: String = "",
                                       threshold: Double = 1.0d,
                                       maxResults: Int = -1,
-                                      outputDelimiter: String = "\t",
+                                      outputDelimiter: String = ",",
                                       ldaPRGSeed: Option[Long] = None,
                                       ldaMaxiterations: Int = 20,
                                       ldaAlpha: Double = 1.02,

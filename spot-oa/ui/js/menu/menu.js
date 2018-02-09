@@ -43,6 +43,11 @@ let menu =
                   {name: 'Advanced Mode', link: '../proxy/ipython_notebook.html#date=${date}', target: '_blank'}
                 ]
               },
+              {name: 'AD', link: '', glyphicon: '', labelledby: 'adMenu', sub:
+                [
+                  {name: 'Suspicious', link: '../ad/suspicious.html#date=${date}', target: '_self'}
+                ]
+              },
               {name: 'Ingest Summary', link: '../ingest/ingest-summary.html#end-date=${date}', glyphicon: '', labelledby: '', sub: [], target: '_self'},
               {name: 'Plugins', link: '', glyphicon: '', labelledby: 'pluginsMenu', sub: []}
 

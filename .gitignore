@@ -1,3 +1,8 @@
 *.iml
 .idea/
 target/
+*.pyc
+*.bundle.min.js
+spot-oa/ui/node_modules/
+spot-oa/ui/package-lock.json
+

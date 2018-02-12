@@ -52,7 +52,7 @@ class SuspiciousStore extends ObservableWithHeadersGraphQLStore {
     getQuery() {
         return `
             query($date:SpotDateType!,$uri:String,$clientIp:SpotIpType) {
-                proxy {
+                ad {
                     suspicious(date: $date, uri:$uri,clientIp:$clientIp) {
                         uriport: uriPort
                         uripath: uriPath

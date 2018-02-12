@@ -42,6 +42,11 @@ SpotSchema = GraphQLSchema(
         type=ProxyQueryType,
         description='Proxy Logs contains the requests in between clients and Proxy servers',
         resolver=lambda *_: {}
+      ),
+      'ad': GraphQLField(
+          type=ADQueryType,
+          description='AD Logs',
+          resolver=lambda *_: {}
       )
     }
   ),

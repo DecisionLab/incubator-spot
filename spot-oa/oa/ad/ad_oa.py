@@ -171,7 +171,11 @@ class OA(object):
         value_string = ""
 
         for row in self._ad_scores:
-            value_string += str(tuple(Util.cast_val(item) for item in row)) + ","
+            for item in row:
+                cells = map(lambda cell: Util.cast_val(cell), item.split(","))
+                cells[2] = str(cells[2])    # manual cast from int to string
+                cells[11] = str(cells[11])  # manual cast from int to string
+                value_string += str(tuple(cells)) + ","
 
         load_into_impala = ("""
              INSERT INTO {0}.ad_scores partition(y={2}, m={3}, d={4}) VALUES {1}

@@ -51,31 +51,25 @@ class SuspiciousStore extends ObservableWithHeadersGraphQLStore {
 
     getQuery() {
         return `
-            query($date:SpotDateType!,$uri:String,$clientIp:SpotIpType) {
+            query($date:SpotDateType!,$clientIp:SpotIpType) {
                 ad {
-                    suspicious(date: $date, uri:$uri,clientIp:$clientIp) {
-                        uriport: uriPort
-                        uripath: uriPath
-                        uriquery: uriQuery
-                        datetime
-                        network_context: networkContext
-                        duration
-                        useragent: userAgent
-                        uri_rep: uriRep
-                        score
-                        username
-                        webcat: webCategory
-                        resconttype: responseContentType
-                        host
-                        referer
-                        csbytes: clientToServerBytes
-                        fulluri: uri
-                        serverip: serverIp
-                        reqmethod: requestMethod
-                        respcode: responseCode
-                        clientip: clientIp
-                        respcode_name: responseCodeLabel
-                        scbytes: serverToClientBytes
+                    suspicious(date: $date, clientIp:$clientIp) {
+                        begintime: beginTime
+                        endtime: endTime
+                        score: score
+                        src_port: srcPort
+                        dst_port: dstPort
+                        user_id: userId
+                        code: code
+                        type: type
+                        src_ipv4: srcIPV4
+                        dst_ipv4: dstIPV4
+                        application_name: applicationName
+                        dvc_domain: dvcDomain
+                        category: category
+                        app: app
+                        date_day: dateDay
+                        action: action
                     }
                 }
             }

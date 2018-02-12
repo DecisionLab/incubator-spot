@@ -28,32 +28,16 @@ import os
 Return list(dict) of all the connectios related to a request name in one hour
 --------------------------------------------------------------------------
 """
-def suspicious_requests(date,uri=None,ip=None,limit=250):
+def suspicious_requests(date, ip, limit=250):
 
     db = Configuration.db()
     proxy_query = ("""
-	SELECT STRAIGHT_JOIN
-	    ps.tdate,ps.time,ps.clientip,ps.host,ps.reqmethod,ps.useragent,
-        ps.resconttype,ps.duration,ps.username,ps.webcat,ps.referer,
-        ps.respcode,ps.uriport,ps.uripath,ps.uriquery,ps.serverip,ps.scbytes,
-        ps.csbytes,ps.fulluri,ps.ml_score,ps.uri_rep,ps.respcode_name,
-        ps.network_context
-	FROM
-	    {0}.proxy_scores ps
-	LEFT JOIN
-	    {0}.proxy_threat_investigation pt
-	    ON (ps.fulluri = pt.fulluri)
-	WHERE
-	    ps.y={1} AND ps.m={2} AND ps.d={3}
-	    AND (pt.fulluri is NULL)
-    """).format(db,date.year,date.month,date.day)
+	SELECT * FROM {0}.ad_scores
+	WHERE ad_scores.y={1} AND ad_scores.m={2} AND ad_scores.d={3}
+	ORDER BY DESC score 
+	LIMIT {4}
+    """).format(db,date.year,date.month,date.day,limit)
 
-
-    p_filter = ""
-    p_filter += " AND ps.fulluri LIKE '%{0}%'".format(uri) if uri else ""
-    p_filter += " AND ps.clientip = '{0}'".format(ip) if ip else ""
-    p_filter += " ORDER BY ps.ml_score limit {0}".format(limit)
-    proxy_query = proxy_query + p_filter
     return ImpalaEngine.execute_query_as_list(proxy_query)
 
 """

@@ -31,115 +31,85 @@ import api.resources.ad as AD
 SuspiciousType = GraphQLObjectType(
     name='ADSuspiciousType',
     fields={
-        'datetime': GraphQLField(
-            type=SpotDatetimeType,
+        'beginTime': GraphQLField(
+            type=GraphQLInt,
             description='Start time of the request',
-            resolver=lambda root, *_: '{} {}'.format(root.get('tdate') or '1970-01-01', root.get('time') or '00:00:00')
+            resolver=lambda root, *_: root.get('begintime')
         ),
-        'clientIp': GraphQLField(
-            type=SpotIpType,
-            description='Client\'s IP address',
-            resolver=lambda root, *_: root.get('clientip')
-        ),
-        'host': GraphQLField(
-            type=GraphQLString,
-            description='Host name from the client request URL',
-            resolver=lambda root, *_: root.get('host')
-        ),
-        'requestMethod': GraphQLField(
-            type=GraphQLString,
-            description='HTTP request method',
-            resolver=lambda root, *_: root.get('reqmethod')
-        ),
-        'userAgent': GraphQLField(
-            type=GraphQLString,
-            description='Client\'s user agent',
-            resolver=lambda root, *_: root.get('useragent')
-        ),
-        'responseContentType': GraphQLField(
-            type=GraphQLString,
-            description='HTTP response content type (MIME)',
-            resolver=lambda root, *_: root.get('resconttype')
-        ),
-        'duration': GraphQLField(
+        'endTime': GraphQLField(
             type=GraphQLInt,
-            description='Connection duration',
-            resolver=lambda root, *_: root.get('duration')
-        ),
-        'username': GraphQLField(
-            type=GraphQLString,
-            description='Username used for authetication',
-            resolver=lambda root, *_: root.get('username')
-        ),
-        'webCategory': GraphQLField(
-            type=GraphQLString,
-            description='Web content categories',
-            resolver=lambda root, *_: root.get('webcat')
-        ),
-        'referer': GraphQLField(
-            type=GraphQLString,
-            description='The address of the webpage that linked to the resource being requested',
-            resolver=lambda root, *_: root.get('referer')
-        ),
-        'responseCode': GraphQLField(
-            type=GraphQLInt,
-            description='HTTP response code',
-            resolver=lambda root, *_: root.get('respcode') or 0
-        ),
-        'uriPort': GraphQLField(
-            type=GraphQLInt,
-            description='URI port',
-            resolver=lambda root, *_: root.get('uriport')
-        ),
-        'uriPath': GraphQLField(
-            type=GraphQLString,
-            description='URI path',
-            resolver=lambda root, *_: root.get('uripath')
-        ),
-        'uriQuery': GraphQLField(
-            type=GraphQLString,
-            description='URI query',
-            resolver=lambda root, *_: root.get('uriquery')
-        ),
-        'serverIp': GraphQLField(
-            type=SpotIpType,
-            description='Server/Proxy IP',
-            resolver=lambda root, *_: root.get('serverip')
-        ),
-        'serverToClientBytes': GraphQLField(
-            type=GraphQLInt,
-            description='Number of bytes sent from appliance to client',
-            resolver=lambda root, *_: root.get('scbytes')
-        ),
-        'clientToServerBytes': GraphQLField(
-            type=GraphQLInt,
-            description='Number of bytes sent from client to appliance',
-            resolver=lambda root, *_: root.get('csbytes')
-        ),
-        'uri': GraphQLField(
-            type=GraphQLString,
-            description='The original URI requested',
-            resolver=lambda root, *_: root.get('fulluri')
+            description='End time of the request',
+            resolver=lambda root, *_: root.get('endtime')
         ),
         'score': GraphQLField(
             type=GraphQLInt,
-            description='Spot ML score value',
-            resolver=lambda root, *_: root.get('ml_score') or 0
+            description='Row Score - Higher is more suspicious',
+            resolver=lambda root, *_: root.get('score') or 0
         ),
-        'uriRep': GraphQLField(
-            type=GraphQLString,
-            description='URI reputation metadata',
-            resolver=lambda root, *_: root.get('uri_rep')
+        'srcPort': GraphQLField(
+            type=GraphQLInt,
+            description='The Source Port',
+            resolver=lambda root, *_: root.get('src_port')
         ),
-        'responseCodeLabel': GraphQLField(
-            type=GraphQLString,
-            description='HTTP response code name',
-            resolver=lambda root, *_: root.get('respcode_name')
+        'dstPort': GraphQLField(
+            type=GraphQLInt,
+            description='The Destination Port',
+            resolver=lambda root, *_: root.get('dst_port')
         ),
-        'networkContext': GraphQLField(
+        'userId': GraphQLField(
             type=GraphQLString,
-            description='@deprecated',
-            resolver=lambda root, *_: root.get('network_context')
+            description='The User ID',
+            resolver=lambda root, *_: root.get('user_id')
+        ),
+        'code': GraphQLField(
+            type=GraphQLString,
+            description='The AD Code',
+            resolver=lambda root, *_: root.get('code')
+        ),
+        'type': GraphQLField(
+            type=GraphQLString,
+            description='The human readable type',
+            resolver=lambda root, *_: root.get('type')
+        ),
+        'srcIPV4': GraphQLField(
+            type=GraphQLString,
+            description='The Source IP',
+            resolver=lambda root, *_: root.get('src_ipv4_str')
+        ),
+        'dstIPV4': GraphQLField(
+            type=GraphQLString,
+            description='The Destination IP',
+            resolver=lambda root, *_: root.get('dst_ipv4_str')
+        ),
+        'applicationName': GraphQLField(
+            type=GraphQLString,
+            description='The Application Name',
+            resolver=lambda root, *_: root.get('application_name')
+        ),
+        'dvcDomain': GraphQLField(
+            type=GraphQLString,
+            description='The DVC Domain',
+            resolver=lambda root, *_: root.get('dvc_domain')
+        ),
+        'category': GraphQLField(
+            type=GraphQLString,
+            description='The Category',
+            resolver=lambda root, *_: root.get('category')
+        ),
+        'app': GraphQLField(
+            type=GraphQLString,
+            description='The App',
+            resolver=lambda root, *_: root.get('app')
+        ),
+        'dateDay': GraphQLField(
+            type=GraphQLString,
+            description='The Begin Day',
+            resolver=lambda root, *_: root.get('date_day')
+        ),
+        'action': GraphQLField(
+            type=GraphQLString,
+            description='The Action',
+            resolver=lambda root, *_: root.get('action')
         )
     }
 )
@@ -521,16 +491,12 @@ QueryType = GraphQLObjectType(
                     type=SpotDateType,
                     description='A date to use as reference to retrieve the list of suspicious requests. Defaults to today'
                 ),
-                'uri': GraphQLArgument(
-                    type=GraphQLString,
-                    description='URI of interest'
-                ),
                 'clientIp': GraphQLArgument(
                     type=SpotIpType,
                     description='Client\'s ip'
                 )
             },
-            resolver=lambda root, args, *_: AD.suspicious_requests(date=args.get('date', date.today()), uri=args.get('uri'), ip=args.get('clientIp'))
+            resolver=lambda root, args, *_: AD.suspicious_requests(date=args.get('date', date.today()), ip=args.get('clientIp'))
         ),
         'edgeDetails': GraphQLField(
             type=GraphQLList(EdgeDetailsType),

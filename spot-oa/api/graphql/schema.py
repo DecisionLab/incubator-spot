@@ -23,6 +23,7 @@ from graphql import (
 from flow import QueryType as NetflowQueryType, MutationType as NetflowMutationType, TYPES as NetflowTypes
 from dns import QueryType as DnsQueryType, MutationType as DnsMutationType, TYPES as DnsTypes
 from proxy import QueryType as ProxyQueryType, MutationType as ProxyMutationType, TYPES as ProxyTypes
+from ad import QueryType as ADQueryType, MutationType as ADMutationType, TYPES as ADTypes
 
 SpotSchema = GraphQLSchema(
   query=GraphQLObjectType(
@@ -66,6 +67,11 @@ SpotSchema = GraphQLSchema(
         'proxy': GraphQLField(
             type=ProxyMutationType,
             description='Proxy related mutation operations',
+            resolver=lambda *_: {}
+        ),
+        'ad': GraphQLField(
+            type=ADMutationType,
+            description='AD related mutation operations',
             resolver=lambda *_: {}
         )
     }

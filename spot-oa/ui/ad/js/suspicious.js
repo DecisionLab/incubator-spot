@@ -90,23 +90,7 @@ ReactDOM.render(
             <Panel title={SpotConstants.SUSPICIOUS_PANEL} expandable reloadable onReload={EdInActions.reloadSuspicious}>
                 <SuspiciousPanel />
             </Panel>
-            <Panel title={SpotConstants.NETVIEW_PANEL} container expandable reloadable
-                   onReload={EdInActions.reloadSuspicious}>
-                <NetworkViewPanel className="proxy-force" />
-            </Panel>
         </PanelRow>
-        <div className="sortable">
-          <PanelRow title={SpotConstants.SCORING_PANEL}>
-            <Panel title={SpotConstants.SCORING_PANEL} reloadable switchable onReload={EdInActions.reloadSuspicious} onSwitch={switchComponents} className="col-md-12">
-              <ScoreNotebook />
-            </Panel>
-          </PanelRow>
-          <PanelRow title={SpotConstants.DETAILS_PANEL}>
-            <Panel title={SpotConstants.DETAILS_PANEL} container switchable expandable onSwitch={switchComponents} className="col-md-12">
-              <DetailsPanel title={SpotConstants.DETAILS_PANEL} />
-            </Panel>
-        </PanelRow>
-        </div>
     </div>,
     document.getElementById('spot-content-wrapper')
 );

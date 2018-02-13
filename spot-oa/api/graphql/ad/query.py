@@ -74,12 +74,12 @@ SuspiciousType = GraphQLObjectType(
         'srcIPV4': GraphQLField(
             type=GraphQLString,
             description='The Source IP',
-            resolver=lambda root, *_: root.get('src_ipv4_str')
+            resolver=lambda root, *_: root.get('src_ip4_str')
         ),
         'dstIPV4': GraphQLField(
             type=GraphQLString,
             description='The Destination IP',
-            resolver=lambda root, *_: root.get('dst_ipv4_str')
+            resolver=lambda root, *_: root.get('dst_ip4_str')
         ),
         'applicationName': GraphQLField(
             type=GraphQLString,

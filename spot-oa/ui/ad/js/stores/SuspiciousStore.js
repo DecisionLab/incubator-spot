@@ -38,15 +38,26 @@ class SuspiciousStore extends ObservableWithHeadersGraphQLStore {
         this.selectedThread = null;
 
         this.headers = {
-            datetime: 'Time',
-            clientip: 'Client IP',
-            host: 'Host',
-            uri_rep: ' ',
-            webcat: 'Web Category',
-            respcode_name: 'Response Code'
+            beginTime: 'beginTime',
+            endTime: 'endTime',
+            score: 'score',
+            srcPort: 'srcPort',
+            dstPort: 'dstPort',
+            userId: 'userId',
+            code: 'code',
+            type: 'type',
+            srcIPV4: 'srcIPV4',
+            dstIPV4: 'dstIPV4',
+            applicationName: 'applicationName',
+            dvcDomain: 'dvcDomain',
+            category: 'category',
+            app: 'app',
+            dateDay: 'dateDay',
+            action: 'action'
         };
 
-        this.ITERATOR = ['datetime', 'clientip', 'host', 'uri_rep', 'webcat', 'respcode_name'];
+        this.ITERATOR = ['beginTime', 'endTime', 'score', 'srcPort', 'dstPort', 'userId', 'code', 'type', 'srcIPV4',
+            'dstIPV4', 'applicationName', 'dvcDomain', 'category', 'app', 'dateDay', 'action'];
     }
 
     getQuery() {
@@ -54,21 +65,21 @@ class SuspiciousStore extends ObservableWithHeadersGraphQLStore {
             query($date:SpotDateType!,$clientIp:SpotIpType) {
                 ad {
                     suspicious(date: $date, clientIp:$clientIp) {
-                        begintime: beginTime
-                        endtime: endTime
+                        beginTime: beginTime
+                        endTime: endTime
                         score: score
-                        src_port: srcPort
-                        dst_port: dstPort
-                        user_id: userId
+                        srcPort: srcPort
+                        dstPort: dstPort
+                        userId: userId
                         code: code
                         type: type
-                        src_ipv4: srcIPV4
-                        dst_ipv4: dstIPV4
-                        application_name: applicationName
-                        dvc_domain: dvcDomain
+                        srcIPV4: srcIPV4
+                        dstIPV4: dstIPV4
+                        applicationName: applicationName
+                        dvcDomain: dvcDomain
                         category: category
                         app: app
-                        date_day: dateDay
+                        dateDay: dateDay
                         action: action
                     }
                 }
@@ -77,7 +88,7 @@ class SuspiciousStore extends ObservableWithHeadersGraphQLStore {
     }
 
     unboxData(data) {
-        return data.proxy.suspicious;
+        return data.ad.suspicious;
     }
 
     setDate(date) {

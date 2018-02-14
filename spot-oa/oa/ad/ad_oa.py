@@ -66,10 +66,6 @@ class OA(object):
         # get app configuration.
         self._spot_conf = Util.get_spot_conf()
 
-        # get scores fields conf
-        conf_file = "{0}/ad_conf.json".format(self._scrtip_path)
-        self._conf = json.loads(open(conf_file).read(), object_pairs_hook=OrderedDict)
-
         # initialize data engine
         self._db = self._spot_conf.get('conf', 'DBNAME').replace("'", "").replace('"', '')
 
@@ -84,8 +80,6 @@ class OA(object):
         self._add_ipynb()
         self._get_ad_results()
         self._create_ad_scores_csv()
-        # self._get_oa_details()
-        # self._ingest_summary()
 
         ##################
         end = time.time()
@@ -104,7 +98,6 @@ class OA(object):
         yr = self._date[:4]
         mn = self._date[4:6]
         dy = self._date[6:]
-        table_schema = []
         HUSER = self._spot_conf.get('conf', 'HUSER').replace("'", "").replace('"', '')
         table_schema = ['suspicious', 'edge', 'threat_investigation', 'timeline', 'storyboard', 'summary']
 
@@ -181,109 +174,3 @@ class OA(object):
              INSERT INTO {0}.ad_scores partition(y={2}, m={3}, d={4}) VALUES {1}
         """).format(self._db, value_string[:-1], yr, mn, dy)
         impala.execute_query(load_into_impala)
-
-    def _get_oa_details(self):
-
-        self._logger.info("Getting OA Proxy suspicious details")
-        # start suspicious connects details process.
-        p_sp = Process(target=self._get_suspicious_details)
-        p_sp.start()
-
-    def _get_suspicious_details(self):
-        uri_list = []
-        iana_conf_file = "{0}/components/iana/iana_config.json".format(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        if os.path.isfile(iana_conf_file):
-            iana_config = json.loads(open(iana_conf_file).read())
-            ad_iana = IanaTransform(iana_config["IANA"])
-
-        for conn in self._ad_scores:
-            clientip = conn[self._conf["ad_score_fields"]["clientip"]]
-            fulluri = conn[self._conf["ad_score_fields"]["fulluri"]]
-            date = conn[self._conf["ad_score_fields"]["p_date"]].split('-')
-            if len(date) == 3:
-                year = date[0]
-                month = date[1].zfill(2)
-                day = date[2].zfill(2)
-                hh = (conn[self._conf["ad_score_fields"]["p_time"]].split(":"))[0]
-                self._get_ad_details(fulluri, clientip, year, month, day, hh, ad_iana)
-
-    def _get_ad_details(self, fulluri, clientip, year, month, day, hh, ad_iana):
-        limit = 250
-        value_string = ""
-
-        query_to_load = ("""
-            SELECT p_date, p_time, clientip, host, webcat, respcode, reqmethod, useragent, resconttype,
-            referer, uriport, serverip, scbytes, csbytes, fulluri, {5} as hh
-            FROM {0}.{1} WHERE y='{2}' AND m='{3}' AND d='{4}' AND
-            h='{5}' AND fulluri='{6}' AND clientip='{7}' LIMIT {8};
-        """).format(self._db, self._table_name, year, month, day, hh, fulluri.replace("'", "\\'"), clientip, limit)
-
-        detail_results = impala.execute_query(query_to_load)
-
-        if ad_iana:
-            # add IANA to results.
-            self._logger.info("Adding IANA translation to details results")
-
-            updated_rows = [conn + (ad_iana.get_name(conn[5], "ad_http_rcode"),) for conn in detail_results]
-            updated_rows = filter(None, updated_rows)
-        else:
-            updated_rows = [conn + ("") for conn in detail_results]
-
-        for row in updated_rows:
-            value_string += str(tuple(item for item in row)) + ","
-
-        if value_string != "":
-            query_to_insert = ("""
-                INSERT INTO {0}.ad_edge PARTITION (y={1}, m={2}, d={3}) VALUES ({4});
-            """).format(self._db, year, month, day, value_string[:-1])
-
-            impala.execute_query(query_to_insert)
-
-    def _ingest_summary(self):
-        # get date parameters.
-        yr = self._date[:4]
-        mn = self._date[4:6]
-        dy = self._date[6:]
-
-        self._logger.info("Getting ingest summary data for the day")
-
-        ingest_summary_cols = ["date", "total"]
-        result_rows = []
-        df_filtered = pd.DataFrame()
-
-        # get ingest summary.
-
-        query_to_load = ("""
-                SELECT p_date, p_time, COUNT(*) as total
-                FROM {0}.{1} WHERE y='{2}' AND m='{3}' AND d='{4}'
-                AND p_date IS NOT NULL AND p_time IS NOT NULL
-                AND clientip IS NOT NULL AND p_time != ''
-                AND host IS NOT NULL AND fulluri IS NOT NULL
-                GROUP BY p_date, p_time;
-        """).format(self._db, self._table_name, yr, mn, dy)
-
-        results = impala.execute_query(query_to_load)
-
-        if results:
-            df_results = as_pandas(results)
-            # Forms a new dataframe splitting the minutes from the time column/
-            df_new = pd.DataFrame([["{0} {1}:{2}".format(val['p_date'], val['p_time'].split(":")[0].zfill(2),
-                                                         val['p_time'].split(":")[1].zfill(2)),
-                                    int(val['total']) if not math.isnan(val['total']) else 0] for key, val in
-                                   df_results.iterrows()], columns=ingest_summary_cols)
-            value_string = ''
-            # Groups the data by minute
-            sf = df_new.groupby(by=['date'])['total'].sum()
-            df_per_min = pd.DataFrame({'date': sf.index, 'total': sf.values})
-
-            df_final = df_filtered.append(df_per_min, ignore_index=True).to_records(False, False)
-            if len(df_final) > 0:
-                query_to_insert = ("""
-                    INSERT INTO {0}.ad_ingest_summary PARTITION (y={1}, m={2}, d={3}) VALUES {4};
-                """).format(self._db, yr, mn, dy, tuple(df_final))
-
-                impala.execute_query(query_to_insert)
-
-        else:
-            self._logger.info("No data found for the ingest summary")

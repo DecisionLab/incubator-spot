@@ -15,18 +15,18 @@
 
 
 #node configuration
-UINODE='cdh-dev-cm.internal.decisionlab.io'
-MLNODE='cdh-dev-data-01.internal.decisionlab.io'
-GWNODE='cdh-dev-data-03.internal.decisionlab.io'
-DBNAME='spot'
+UINODE=cdh-dev-cm.internal.decisionlab.io
+MLNODE=cdh-dev-data-01.internal.decisionlab.io
+GWNODE=cdh-dev-data-03.internal.decisionlab.io
+DBNAME=spot
 
 #hdfs - base user and data source config
-HUSER='/user/spot'
-NAME_NODE='cdh-dev-manage-01.internal.decisionlab.io'
+HUSER=/user/spot
+NAME_NODE=cdh-dev-manage-01.internal.decisionlab.io
 WEB_PORT=50070
 DNS_PATH=${HUSER}/${DSOURCE}/hive/y=${YR}/m=${MH}/d=${DY}/
 PROXY_PATH=${HUSER}/${DSOURCE}/hive/y=${YR}/m=${MH}/d=${DY}/
-FLOW_PATH=${HUSER}/${DSOURCE}/hive/y=${YR}/m=${MH}/d=${DY}/
+AD_PATH=${HUSER}/odm/event/p_dvc_vendor=Microsoft_AD/p_dvc_type=McAfee_SIEM/p_dt=${YR}-${MH}-${DY}*
 HPATH=${HUSER}/${DSOURCE}/scored_results/${FDATE}
 
 #impala config
@@ -34,13 +34,13 @@ IMPALA_DEM=cdh-dev-data-01.internal.decisionlab.io
 IMPALA_PORT=21050
 
 #local fs base user and data source config
-LUSER='/opt/spot'
+LUSER=/opt/spot
 LPATH=${LUSER}/ml/${DSOURCE}/${FDATE}
 RPATH=${LUSER}/ipython/user/${FDATE}
 LIPATH=${LUSER}/ingest
 
 #dns suspicious connects config
-USER_DOMAIN='decisionlab.io'
+USER_DOMAIN=decisionlab.io
 
 SPK_EXEC='2'
 SPK_EXEC_MEM='2048m'
@@ -55,7 +55,19 @@ SPK_AUTO_BRDCST_JOIN_THR='10485760'
 LDA_ALPHA='1.02'
 LDA_BETA='1.001'
 
-PRECISION='64'
+PRECISION=64
 TOL='1e-6'
 TOPIC_COUNT=20
 DUPFACTOR=1000
+
+# API CORS Options
+#
+#   ACCESS_CONTROL_ALLOW_ORIGIN:
+#       Configuration type: string or comma seperated list
+#
+#   Examples:
+#   '*' = Allow any origin (Default)
+#   'http://trustedresource.com' = Allow specific origin
+#   'http://trustedresource.com,http://anothertrustedresource.com' = Allow multiple origins
+#
+ACCESS_CONTROL_ALLOW_ORIGIN='*'

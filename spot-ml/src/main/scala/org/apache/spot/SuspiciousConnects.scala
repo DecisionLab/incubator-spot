@@ -65,12 +65,6 @@ object SuspiciousConnects {
 
         sparkSession.sparkContext.hadoopConfiguration.set("avro.mapred.ignore.inputs.without.extension", "false")
 
-        // inputProxyRecords.filter(inputProxyRecords("code").isNotNull).select("type", "code").groupBy("type").agg(count("*").alias("count")).orderBy(desc("count")).show(22, truncate = false)
-        // inputProxyRecords.filter(inputProxyRecords("code").isNotNull).select("type", "code", "src_lat", "src_long", "dst_lat", "dst_long").where(inputProxyRecords("type") === "An account failed to log on").show(1, truncate = false)
-        // inputProxyRecords.filter(inputProxyRecords("code").isNotNull).select("type", "code", "src_lat", "src_long", "dst_lat", "dst_long", "src_ip4_str", "dst_ip4_str", "begintime", "endtime", "category", "action", "app", "dvc_domain", "src_port", "dst_port", "user_id", "application_name").where(inputProxyRecords("type") === "An account failed to log on").show(50, truncate = true)
-        // inputDataFrame.filter(inputDataFrame("code").isNotNull).select("type", "code", "src_ip4_str", "dst_ip4_str", "begintime", "endtime", "category", "action", "app", "dvc_domain", "src_port", "dst_port", "user_id", "application_name").where(inputDataFrame("code") === "263047400").show(1, truncate = true)
-
-        // inputDataFrame.filter(inputDataFrame("code").isNotNull).select("type", "code", "src_ip4_str", "dst_ip4_str", "begintime", "endtime", "category", "action", "app", "dvc_domain", "src_port", "dst_port", "user_id", "application_name").where(inputDataFrame("code") === "263047710").show(150, truncate = false)
         val inputDataFrame = InputOutputDataHandler.getInputDataFrame(sparkSession, config.inputPath, logger)
 
           .getOrElse(sparkSession.emptyDataFrame)

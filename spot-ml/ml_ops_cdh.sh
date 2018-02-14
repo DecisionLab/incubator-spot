@@ -33,6 +33,7 @@ if [[ "${#FDATE}" != "8" || -z "${DSOURCE}" ]]; then
     echo "for example:"
     echo "./ml_ops.sh 20160122 dns 1000 1e-6"
     echo "./ml_ops.sh 20160122 flow"
+    echo "./ml_ops.sh 20160122 ad"
     echo "./ml_ops.sh 20160122 proxy 100"
     exit
 fi
@@ -58,6 +59,8 @@ if [ "$DSOURCE" == "flow" ]; then
     RAWDATA_PATH=${FLOW_PATH}
 elif [ "$DSOURCE" == "dns" ]; then
     RAWDATA_PATH=${DNS_PATH}
+elif [ "$DSOURCE" == "ad" ]; then
+    RAWDATA_PATH=${AD_PATH}
 else
     RAWDATA_PATH=${PROXY_PATH}
 fi
@@ -77,7 +80,9 @@ HDFS_SCORED_CONNECTS=${HPATH}/scores
 hdfs dfs -rm -R -f ${HDFS_SCORED_CONNECTS}
 
 export _JAVA_OPTIONS="-Xms1024M -Xmx2048M"
-export SPARK_SUBMIT_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=7777
+
+# NOTE: This is very useful for remote debugging spark jobs
+#export SPARK_SUBMIT_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=7777
 
 spark2-submit --class "org.apache.spot.SuspiciousConnects" \
   --master yarn \
@@ -93,9 +98,9 @@ spark2-submit --class "org.apache.spot.SuspiciousConnects" \
   --conf spark.kryoserializer.buffer.max=512m \
   --conf spark.yarn.am.waitTime=100s \
   --conf spark.yarn.am.memoryOverhead=${SPK_DRIVER_MEM_OVERHEAD} \
-  --conf spark.yarn.executor.memoryOverhead=${SPK_EXEC_MEM_OVERHEAD} /home/avanadio/spot-ml-assembly-1.1.jar \
+  --conf spark.yarn.executor.memoryOverhead=${SPK_EXEC_MEM_OVERHEAD} target/scala-2.11/spot-ml-assembly-1.1.jar \
   --analysis ${DSOURCE} \
-  --input "/user/spot/odm/event/p_dvc_vendor=Microsoft_AD/p_dvc_type=McAfee_SIEM/"  \
+  --input ${RAWDATA_PATH}  \
   --dupfactor ${DUPFACTOR} \
   --feedback ${FEEDBACK_PATH} \
   --ldatopiccount ${TOPIC_COUNT} \
@@ -107,4 +112,3 @@ spark2-submit --class "org.apache.spot.SuspiciousConnects" \
   --ldabeta ${LDA_BETA} \
   --precision ${PRECISION} \
   $USER_DOMAIN_CMD
-

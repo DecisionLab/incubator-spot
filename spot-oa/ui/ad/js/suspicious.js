@@ -86,11 +86,9 @@ const DetailsPanel = require('./components/DetailsPanel.react');
 
 ReactDOM.render(
     <div id="spot-content">
-        <PanelRow>
-            <Panel title={SpotConstants.SUSPICIOUS_PANEL} expandable reloadable onReload={EdInActions.reloadSuspicious}>
+            <Panel title={SpotConstants.SUSPICIOUS_PANEL} reloadable className='col-md-12' onReload={EdInActions.reloadSuspicious}>
                 <SuspiciousPanel />
             </Panel>
-        </PanelRow>
     </div>,
     document.getElementById('spot-content-wrapper')
 );

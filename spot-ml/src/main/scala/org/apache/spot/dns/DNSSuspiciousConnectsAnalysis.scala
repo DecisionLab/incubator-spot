@@ -113,8 +113,7 @@ object DNSSuspiciousConnectsAnalysis {
   def filterRecords(inputDNSRecords: DataFrame): DataFrame = {
 
     val cleanDNSRecordsFilter = inputDNSRecords(TimeStamp).isNotNull &&
-      inputDNSRecords(TimeStamp).notEqual("") &&
-      inputDNSRecords(TimeStamp).notEqual("-") &&
+      inputDNSRecords(TimeStamp).geq(0) &&
       inputDNSRecords(UnixTimeStamp).geq(0) &&
       inputDNSRecords(FrameLength).geq(0) &&
       inputDNSRecords(QueryName).isNotNull &&
@@ -128,7 +127,7 @@ object DNSSuspiciousConnectsAnalysis {
         inputDNSRecords(QueryClass).notEqual("") &&
         inputDNSRecords(QueryClass).notEqual("-")) ||
         inputDNSRecords(QueryType).isNotNull ||
-        inputDNSRecords(QueryResponseCode).geq(0))
+        inputDNSRecords(QueryResponseCode).notEqual(""))
 
     inputDNSRecords
       .filter(cleanDNSRecordsFilter)

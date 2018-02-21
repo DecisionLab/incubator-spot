@@ -26,34 +26,34 @@ object DNSSchema {
 
   // input fields
 
-  val TimeStamp = "frame_time"
-  val TimeStampField = StructField(TimeStamp, StringType, nullable= true)
+  val TimeStamp = "begin_time"
+  val TimeStampField = StructField(TimeStamp, LongType, nullable= true)
 
-  val UnixTimeStamp = "unix_tstamp"
+  val UnixTimeStamp = "event_time"
   val UnixTimeStampField = StructField(UnixTimeStamp, LongType, nullable= true)
 
-  val FrameLength = "frame_len"
+  val FrameLength = "dns_len"
   val FrameLengthField = StructField(FrameLength, IntegerType, nullable= true)
 
-  val ClientIP = "ip_dst"
+  val ClientIP = "dst_ip4_str"
   val ClientIPField = StructField(ClientIP, StringType, nullable= true)
 
-  val ServerIP = "ip_src"
+  val ServerIP = "src_ip4_str"
   val ServerIPField = StructField(ServerIP, StringType, nullable= true)
 
-  val QueryName = "dns_qry_name"
+  val QueryName = "dns_query"
   val QueryNameField = StructField(QueryName, StringType, nullable= true)
 
-  val QueryClass = "dns_qry_class"
+  val QueryClass = "dns_class"
   val QueryClassField = StructField(QueryClass, StringType, nullable= true)
 
-  val QueryType = "dns_qry_type"
+  val QueryType = "dns_type"
   val QueryTypeField = StructField(QueryType, IntegerType, nullable= true)
 
-  val QueryResponseCode = "dns_qry_rcode"
-  val QueryResponseCodeField = StructField(QueryResponseCode, IntegerType, nullable= true)
+  val QueryResponseCode = "dns_response_code"
+  val QueryResponseCodeField = StructField(QueryResponseCode, StringType, nullable= true)
 
-  val AnswerAddress = "dns_a"
+  val AnswerAddress = "dns_answers"
   val AnswerAddressField = StructField(AnswerAddress, StringType, nullable= true)
 
   // intermediate and derived fields

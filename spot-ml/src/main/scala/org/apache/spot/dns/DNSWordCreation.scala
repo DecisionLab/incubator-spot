@@ -17,12 +17,18 @@
 
 package org.apache.spot.dns
 
+import java.sql.Date
+import java.text.SimpleDateFormat
+
 import org.apache.spark.broadcast.Broadcast
+import org.apache.spark.sql.catalyst.util.DateTimeUtils
+import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spot.utilities.DomainProcessor.{DomainInfo, extractDomainInfo}
 import org.apache.spot.utilities.{MathUtils, TimeUtilities}
 import org.apache.spot.proxy.ProxySuspiciousConnectsModel.EntropyCuts
 import org.apache.spot.utilities.data.validation.InvalidDataHandler
+
 import scala.util.{Success, Try}
 
 
@@ -47,22 +53,27 @@ class DNSWordCreation(topDomainsBC: Broadcast[Set[String]], userDomain: String) 
     *         (timeStamp: String, unixTimeStamp: Long, frameLength: Int, clientIP: String,
     *         queryName: String, queryClass: String, dnsQueryType: Int, dnsQueryRCode :Int) =>  Word: String
     */
-  def wordCreationUDF =
-    udf((timeStamp: String,
+  def wordCreationUDF: UserDefinedFunction =
+    udf((timeStamp: Long,
          unixTimeStamp: Long,
          frameLength: Int,
          clientIP: String,
          queryName: String,
          queryClass: String,
          dnsQueryType: Int,
-         dnsQueryRcode: Int) => dnsWord(timeStamp,
-      unixTimeStamp,
-      frameLength,
-      clientIP,
-      queryName,
-      queryClass,
-      dnsQueryType,
-      dnsQueryRcode))
+         dnsQueryRcode: String) => {
+
+      dnsWord(timeStamp,
+          unixTimeStamp,
+          frameLength,
+          clientIP,
+          queryName,
+          queryClass,
+          dnsQueryType,
+          dnsQueryRcode)
+        }
+
+      )
 
 
   /**
@@ -79,14 +90,14 @@ class DNSWordCreation(topDomainsBC: Broadcast[Set[String]], userDomain: String) 
     * @return The word representation of the DNS entry.
     */
 
-  def dnsWord(timeStamp: String,
+  def dnsWord(timeStamp: Long,
               unixTimeStamp: Long,
               frameLength: Int,
               clientIP: String,
               queryName: String,
               queryClass: String,
               dnsQueryType: Int,
-              dnsQueryRcode: Int): String = {
+              dnsQueryRcode: String): String = {
 
     Try {
       val DomainInfo(domain, topDomain, subdomain, subdomainLength, subdomainEntropy, numPeriods) =
@@ -94,7 +105,7 @@ class DNSWordCreation(topDomainsBC: Broadcast[Set[String]], userDomain: String) 
 
       Seq(topDomain,
         MathUtils.logBaseXInt(frameLength.toDouble, 2),
-        TimeUtilities.getTimeAsHour(timeStamp.split(" +")(3)).toString,
+        TimeUtilities.getTimeAsHour(new SimpleDateFormat("HH:mm:ss").format(timeStamp)).toString,
         MathUtils.logBaseXInt(subdomainLength.toDouble, 2),
         MathUtils.bin(subdomainEntropy, EntropyCuts),
         MathUtils.logBaseXInt(numPeriods.toDouble, 2),

@@ -42,14 +42,14 @@ class DNSScoreFunction(topicCount: Int,
 
   val dnsWordCreator = new DNSWordCreation(topDomainsBC, userDomain)
 
-  def score[P <: FloatPointPrecisionUtility](precisionUtility: P)(timeStamp: String,
+  def score[P <: FloatPointPrecisionUtility](precisionUtility: P)(timeStamp: Long,
                                                                   unixTimeStamp: Long,
                                                                   frameLength: Int,
                                                                   clientIP: String,
                                                                   queryName: String,
                                                                   queryClass: String,
                                                                   queryType: Int,
-                                                                  queryResponseCode: Int,
+                                                                  queryResponseCode: String,
                                                                   documentTopicMix: Seq[precisionUtility.TargetType]): Double = {
 
     val word = dnsWordCreator.dnsWord(timeStamp,

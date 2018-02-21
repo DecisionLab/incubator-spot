@@ -17,6 +17,8 @@
 
 package org.apache.spot.dns.model
 
+import java.text.SimpleDateFormat
+
 import org.apache.log4j.Logger
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
@@ -50,9 +52,9 @@ import scala.util.{Failure, Success, Try}
   *
   * Create these models using the  factory in the companion object.
   *
-  * @param inTopicCount          Number of topics to use in the topic model.
-  * @param inIpToTopicMix        Per-IP topic mix.
-  * @param inWordToPerTopicProb  Per-word,  an array of probability of word given topic per topic.
+  * @param inTopicCount         Number of topics to use in the topic model.
+  * @param inIpToTopicMix       Per-IP topic mix.
+  * @param inWordToPerTopicProb Per-word,  an array of probability of word given topic per topic.
   */
 class DNSSuspiciousConnectsModel(inTopicCount: Int,
                                  inIpToTopicMix: DataFrame,
@@ -83,15 +85,14 @@ class DNSSuspiciousConnectsModel(inTopicCount: Int,
         topDomainsBC,
         userDomain)
 
-
-    val scoringUDF = udf((timeStamp: String,
+    val scoringUDF = udf((timeStamp: Long,
                           unixTimeStamp: Long,
                           frameLength: Int,
                           clientIP: String,
                           queryName: String,
                           queryClass: String,
                           queryType: Int,
-                          queryResponseCode: Int,
+                          queryResponseCode: String,
                           documentTopicMix: Seq[precisionUtility.TargetType]) =>
       scoreFunction.score(precisionUtility)(timeStamp,
         unixTimeStamp,
@@ -216,4 +217,5 @@ object DNSSuspiciousConnectsModel {
   }
 
   case class TempFields(topDomainClass: Int, subdomainLength: Integer, subdomainEntropy: Double, numPeriods: Integer)
+
 }

@@ -1,0 +1,267 @@
+event_time          	bigint              	timestamp of event (UTC)
+begin_time          	bigint              	timestamp of event (UTC)
+end_time            	bigint              	timestamp of event (UTC)
+event_insert_time   	bigint              	timestamp of event (UTC)
+last_update_time    	bigint              	timestamp of event (UTC)
+duration            	float               	Time duration (milliseconds)
+event_id            	string              	Unique identifier for event
+name                	string              	Name of event
+org                 	string              	Organization
+type                	string              	Type information
+n_proto             	string              	Network protocol of event
+a_proto             	string              	Application protocol of event
+msg                 	string              	Message (details of action taken on object)
+mac                 	string              	MAC address
+severity            	string              	Severity of event
+raw                 	string              	Raw text message of entire event
+risk                	float               	Risk score
+code                	string              	Response or error code
+category            	string              	Event category
+query               	string              	Query (DNS query, URI query, SQL query, etc.)
+service             	string              	(i.e. service name, type of service)
+state               	string              	State of object
+in_bytes            	bigint              	Bytes in
+out_bytes           	bigint              	Bytes out
+xref                	string              	External reference to public description
+version             	string              	Version
+api                 	string              	API label
+parameter           	string              	Parameter label
+action              	string              	Action label
+proc                	string              	Process label
+app                 	string              	Application label
+disposition         	string              	Disposition label
+prevalence          	string              	Prevalence label
+confidence          	string              	Confidence label
+sensitivity         	string              	Sensitivity label
+count               	int                 	Generic count
+company             	string              	Company label
+additional_attrs    	string              	Additional attributes of the event
+totrust             	string              	TBD
+fromtrust           	string              	TBD
+rule                	string              	TBD
+threat              	string              	TBD
+pcap_id             	int                 	TBD
+dvc_time            	bigint              	UTC timestamp from device where event/alert originates or is received
+dvc_ip4             	bigint              	IP address of device
+dvc_ip4_str         	string              	IP address of device
+dvc_ip6             	bigint              	IP address of device
+dvc_ip6_str         	string              	IP address of device
+dvc_host            	string              	Hostname of device
+dvc_domain          	string              	Domain of device
+dvc_type            	string              	Device type that generated the log
+dvc_vendor          	string              	Vendor
+dvc_fwd_ip4         	bigint              	Forwarded from device
+dvc_fwd_ip4_str     	string              	Forwarded from device
+dvc_fwd_ip6         	bigint              	Forwarded from device
+dvc_fwd_ip6_str     	string              	Forwarded from device
+dvc_version         	string              	TBD
+src_ip4             	bigint              	Source ip address of event
+src_ip4_str         	string              	Source ip address of event
+src_ip6             	bigint              	Source ip address of event
+src_ip6_str         	string              	Source ip address of event
+src_host            	string              	Source FQDN of event
+src_domain          	string              	Domain name of source address
+src_port            	int                 	Source port of event
+src_country_code    	string              	Source country code
+src_country_name    	string              	Source country name
+src_region          	string              	Source region
+src_city            	string              	Source city
+src_lat             	int                 	Source latitude
+src_long            	int                 	Source longitude
+dst_ip4             	bigint              	Destination ip address of event
+dst_ip4_str         	string              	Destination ip address of event
+dst_ip6             	bigint              	Destination ip address of event
+dst_ip6_str         	string              	Destination ip address of event
+dst_host            	string              	Destination FQDN of event
+dst_domain          	string              	Domain name of destination address
+dst_port            	int                 	Destination port of event
+dst_country_code    	string              	Source country code
+dst_country_name    	string              	Source country name
+dst_region          	string              	Source region
+dst_city            	string              	Source city
+dst_lat             	int                 	Source latitude
+dst_long            	int                 	Source longitude
+src_asn             	int                 	Autonomous system number
+dst_asn             	int                 	Autonomous system number
+net_direction       	string              	Direction
+net_flags           	string              	TCP flags
+file_name           	string              	Filename from event
+file_path           	string              	File path
+file_atime          	bigint              	Timestamp (UTC) of file access
+file_acls           	string              	File permissions
+file_type           	string              	Type of file
+file_size           	int                 	Size of file in bytes
+file_desc           	string              	Description of file
+file_hash           	string              	Hash of file
+file_hash_type      	string              	Type of hash
+end_object          	string              	File/Process/ Registry
+end_action          	string              	Action taken on object (open/delete/ edit)
+end_msg             	string              	Message (details of action taken on object)
+end_app             	string              	Application
+end_location        	string              	Location
+end_proc            	string              	Process
+user_name           	string              	username from event
+src_user_name       	string              	username from event
+dst_user_name       	string              	username from event
+user_email          	string              	Email address
+user_id             	string              	userid
+user_loc            	string              	location
+user_desc           	string              	Description of user
+dns_class           	string              	DNS class
+dns_len             	int                 	DNS frame length
+dns_query           	string              	Requested DNS query
+dns_response_code   	string              	Response code
+dns_answers         	string              	Response to DNS Query
+dns_type            	int                 	TBD
+prx_category        	string              	Event category
+prx_browser         	string              	Web browser
+prx_code            	string              	Error or response code
+prx_referrer        	string              	Referrer
+prx_host            	string              	Requested URI
+prx_filter_rule     	string              	Applied filter or rule
+prx_filter_result   	string              	Result of applied filter or rule
+prx_query           	string              	URI query
+prx_action          	string              	Action taken on object
+prx_method          	string              	HTTP method
+prx_type            	string              	Type of request
+http_request_method 	string              	HTTP method
+http_request_uri    	string              	Requested URI
+http_request_body_len	int                 	Length of request body
+http_request_user_name	string              	username from event
+http_request_password	string              	Password from event
+http_request_proxied	string              	TBD
+http_request_headers	string              	HTTP request headers
+http_response_status_code	int                 	HTTP response status code
+http_response_status_msg	string              	HTTP response status message
+http_response_body_len	int                 	Length of response body
+http_response_info_code	int                 	HTTP response info code
+http_response_info_msg	string              	HTTP response info message
+http_response_resp_fuids	string              	Response FUIDS
+http_response_mime_types	string              	Mime types
+http_response_headers	string              	Response headers
+smtp_trans_depth    	int                 	Depth of email into SMTP exchange
+smtp_headers_helo   	string              	Helo header
+smtp_headers_mailfrom	string              	Mailfrom header
+smtp_headers_rcptto 	string              	Rcptto header
+smtp_headers_date   	string              	Header date
+smtp_headers_from   	string              	From header
+smtp_headers_to     	string              	To header
+smtp_headers_reply_to	string              	Reply to header
+smtp_headers_msg_id 	string              	Message ID
+smtp_headers_in_reply_to	string              	In reply to header
+smtp_headers_subject	string              	Subject
+smtp_headers_x_originating_ip4	bigint              	Originating IP address
+smtp_headers_x_originating_ip4_str	string              	Originating IP address
+smtp_headers_first_received	string              	First to receive message
+smtp_headers_second_received	string              	Second to receive message
+smtp_last_reply     	string              	Last reply in message chain
+smtp_path           	string              	Path of message
+smtp_user_agent     	string              	User agent
+smtp_tls            	boolean             	Indication of TLS use
+smtp_is_webmail     	boolean             	Indication of webmail
+ftp_user_name       	string              	Username
+ftp_password        	string              	Password
+ftp_command         	string              	FTP command
+ftp_arg             	string              	Argument
+ftp_mime_type       	string              	Mime type
+ftp_file_size       	int                 	File size
+ftp_reply_code      	int                 	Reply code
+ftp_reply_msg       	string              	Reply message
+ftp_data_channel_passive	boolean             	Passive data channel?
+ftp_data_channel_rsp_p	string              	TBD
+ftp_cwd             	string              	Current working directory
+ftp_cmdarg_ts       	float               	TBD
+ftp_cmdarg_cmd      	string              	Command
+ftp_cmdarg_arg      	string              	Command argument
+ftp_cmdarg_seq      	int                 	Sequence
+ftp_pending_commands	string              	Pending commands
+ftp_is_passive      	boolean             	Passive mode enabled
+ftp_fuid            	string              	TBD
+ftp_last_auth_requested	string              	TBD
+snmp_version        	string              	TBD
+snmp_community      	string              	TBD
+snmp_get_requests   	int                 	TBD
+snmp_get_bulk_requests	int                 	TBD
+snmp_get_responses  	int                 	TBD
+snmp_set_requests   	int                 	TBD
+snmp_display_string 	string              	TBD
+snmp_up_since       	float               	TBD
+tls_version         	string              	TBD
+tls_cipher          	string              	TBD
+tls_curve           	string              	TBD
+tls_server_name     	string              	TBD
+tls_resumed         	boolean             	TBD
+tls_next_protocol   	string              	TBD
+tls_established     	boolean             	TBD
+tls_cert_chain_fuids	string              	TBD
+tls_client_cert_chain_fuids	string              	TBD
+tls_subject         	string              	TBD
+tls_issuer          	string              	TBD
+ssh_version         	string              	TBD
+ssh_auth_success    	boolean             	TBD
+ssh_client          	string              	TBD
+ssh_server          	string              	TBD
+ssh_cipher_algorithm	string              	TBD
+ssh_mac_algorithm   	string              	TBD
+ssh_compression_algorithm	string              	TBD
+ssh_key_exchange_algorithm	string              	TBD
+ssh_host_key_algorithm	string              	TBD
+dhcp_assigned_ip4   	bigint              	TBD
+dhcp_assigned_ip4_str	string              	TBD
+dhcp_mac            	string              	TBD
+dhcp_lease_time     	double              	TBD
+irc_user            	string              	TBD
+irc_nickname        	string              	TBD
+irc_command         	string              	TBD
+irc_value           	string              	TBD
+irc_additional_data 	string              	TBD
+flow_in_packets     	bigint              	TBD
+flow_out_packets    	bigint              	TBD
+flow_conn_state     	string              	TBD
+flow_history        	string              	TBD
+flow_src_dscp       	string              	TBD
+flow_dst_dscp       	string              	TBD
+flow_input          	string              	TBD
+flow_output         	string              	TBD
+vuln_id             	string              	TBD
+vuln_type           	string              	TBD
+vuln_status         	string              	TBD
+vuln_severity       	string              	TBD
+av_riskname         	string              	TBD
+av_actualaction     	string              	TBD
+av_requestedaction  	string              	TBD
+av_secondaryaction  	string              	TBD
+av_downloadsite     	string              	TBD
+av_downloadedby     	string              	TBD
+av_tracking_status  	string              	TBD
+av_firstseen        	bigint              	TBD
+application_hash    	string              	TBD
+application_hash_type	string              	TBD
+application_name    	string              	TBD
+application_version 	string              	TBD
+application_type    	string              	TBD
+av_categoryset      	string              	TBD
+av_categorytype     	string              	TBD
+av_threat_count     	int                 	TBD
+av_infected_count   	int                 	TBD
+av_omitted_count    	int                 	TBD
+av_scanid           	int                 	TBD
+av_startmessage     	string              	TBD
+av_stopmessage      	string              	TBD
+av_totalfiles       	int                 	TBD
+av_signatureid      	string              	TBD
+av_signaturestring  	string              	TBD
+av_signaturesubid   	string              	TBD
+av_intrusionurl     	string              	TBD
+av_intrusionpayloadurl	string              	TBD
+objectname          	string              	TBD
+p_dvc_vendor        	string
+p_dvc_type          	string
+p_dt                	string
+
+# Partition Information
+# col_name            	data_type           	comment
+
+p_dvc_vendor        	string
+p_dvc_type          	string
+p_dt                	string

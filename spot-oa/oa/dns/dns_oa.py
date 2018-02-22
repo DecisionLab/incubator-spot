@@ -29,19 +29,19 @@ from collections import OrderedDict
 from utils import Util
 from components.data.data import Data
 from components.iana.iana_transform import IanaTransform
-from components.nc.network_context import NetworkContext 
+from components.nc.network_context import NetworkContext
 from multiprocessing import Process
-import pandas as pd 
+import pandas as pd
 import time
 
 class OA(object):
-    
+
     def __init__(self,date,limit=500,logger=None):
 
         self._initialize_members(date,limit,logger)
 
     def _initialize_members(self,date,limit,logger):
-        
+
         # get logger if exists. if not, create new instance.
         self._logger = logging.getLogger('OA.DNS') if logger else Util.get_logger('OA.DNS',create_file=False)
 
@@ -56,7 +56,7 @@ class OA(object):
         self._ingest_summary_path = None
         self._dns_scores = []
         self._dns_scores_headers = []
-        self._results_delimiter = '\t'
+        self._results_delimiter = ','
         self._details_limit = 250
 
         # get app configuration.
@@ -118,9 +118,9 @@ class OA(object):
     def _create_folder_structure(self):
 
         # create date folder structure if it does not exist.
-        self._logger.info("Creating folder structure for OA (data and ipynb)")       
+        self._logger.info("Creating folder structure for OA (data and ipynb)")
         self._data_path,self._ingest_summary_path,self._ipynb_path = Util.create_oa_folders("dns",self._date)
-    
+
 
     def _add_ipynb(self):
 
@@ -163,15 +163,14 @@ class OA(object):
         # add dns content.
         self._dns_scores = [ conn[:]  for conn in self._dns_results][:]
 
-
     def _move_time_stamp(self,dns_data):
-        
+
         # return dns_data_ordered
-        return dns_data        
+        return dns_data
 
 
     def _create_dns_scores(self):
-        
+
         # get date parameters.
         yr = self._date[:4]
         mn = self._date[4:6]
@@ -191,7 +190,7 @@ class OA(object):
 
 
     def _add_tld_column(self):
-        qry_name_col = self._conf['dns_results_fields']['dns_qry_name'] 
+        qry_name_col = self._conf['dns_results_fields']['dns_qry_name']
         self._dns_scores = [conn + [ get_tld("http://" + str(conn[qry_name_col]), fail_silently=True) if "http://" not in str(conn[qry_name_col]) else get_tld(str(conn[qry_name_col]), fail_silently=True)] for conn in self._dns_scores ]
 
 
@@ -205,30 +204,30 @@ class OA(object):
         # initialize reputation services.
         self._rep_services = []
         self._logger.info("Initializing reputation services.")
-        for service in rep_conf:               
+        for service in rep_conf:
             config = rep_conf[service]
             module = __import__("components.reputation.{0}.{0}".format(service), fromlist=['Reputation'])
             self._rep_services.append(module.Reputation(config,self._logger))
-                
+
         # get columns for reputation.
         rep_cols = {}
-        indexes =  [ int(value) for key, value in self._conf["add_reputation"].items()]  
+        indexes =  [ int(value) for key, value in self._conf["add_reputation"].items()]
         self._logger.info("Getting columns to add reputation based on config file: dns_conf.json".format())
         for index in indexes:
             col_list = []
             for conn in self._dns_scores:
-                col_list.append(conn[index])            
+                col_list.append(conn[index])
             rep_cols[index] = list(set(col_list))
 
         # get reputation per column.
-        self._logger.info("Getting reputation for each service in config")        
+        self._logger.info("Getting reputation for each service in config")
         rep_services_results = []
- 
+
         if self._rep_services :
             for key,value in rep_cols.items():
                 rep_services_results = [ rep_service.check(None,value) for rep_service in self._rep_services]
-                rep_results = {}            
-                for result in rep_services_results:            
+                rep_results = {}
+                for result in rep_services_results:
                     rep_results = {k: "{0}::{1}".format(rep_results.get(k, ""), result.get(k, "")).strip('::') for k in set(rep_results) | set(result)}
 
                 if rep_results:
@@ -240,11 +239,12 @@ class OA(object):
 
 
     def _add_hh_column(self):
-
         # add hh value column.
         dns_date_index = self._conf["dns_results_fields"]["frame_time"]
-        self._dns_scores = [conn + [ filter(None,conn[dns_date_index].split(" "))[3].split(":")[0]] for conn in self._dns_scores  ]
+        for conn in self._dns_scores:
+            conn[dns_date_index] = datetime.datetime.fromtimestamp(int(conn[dns_date_index])).strftime('%Y-%m-%d %H:%M:%S')
 
+        self._dns_scores = [conn + [ filter(None,conn[dns_date_index].split(" ")[1].split(":")[0])] for conn in self._dns_scores ]
 
     def _add_iana(self):
         iana_conf_file = "{0}/components/iana/iana_config.json".format(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -255,10 +255,10 @@ class OA(object):
             dns_qry_class_index = self._conf["dns_results_fields"]["dns_qry_class"]
             dns_qry_type_index = self._conf["dns_results_fields"]["dns_qry_type"]
             dns_qry_rcode_index = self._conf["dns_results_fields"]["dns_qry_rcode"]
-            self._dns_scores = [ conn + [ dns_iana.get_name(conn[dns_qry_class_index],"dns_qry_class")] + [dns_iana.get_name(conn[dns_qry_type_index],"dns_qry_type")] + [dns_iana.get_name(conn[dns_qry_rcode_index],"dns_qry_rcode")] for conn in self._dns_scores ]
-            
-        else:            
-            self._dns_scores = [ conn + ["","",""] for conn in self._dns_scores ] 
+            self._dns_scores = [ conn + [ dns_iana.get_name(conn[dns_qry_class_index],"dns_qry_class")] + [dns_iana.get_name(conn[dns_qry_type_index],"dns_qry_type")] + [dns_iana.get_name(int(conn[dns_qry_rcode_index]),"dns_qry_rcode")] for conn in self._dns_scores ]
+
+        else:
+            self._dns_scores = [ conn + ["","",""] for conn in self._dns_scores ]
 
 
     def _add_network_context(self):
@@ -273,13 +273,13 @@ class OA(object):
 
 
     def _get_oa_details(self):
-        
+
         self._logger.info("Getting OA DNS suspicious details/dendro diagram")
         # start suspicious connects details process.
         p_sp = Process(target=self._get_suspicious_details)
         p_sp.start()
 
-        # start chord diagram process.            
+        # start chord diagram process.
         p_dn = Process(target=self._get_dns_dendrogram)
         p_dn.start()
 
@@ -293,7 +293,7 @@ class OA(object):
         if os.path.isfile(iana_conf_file):
             iana_config  = json.loads(open(iana_conf_file).read())
             dns_iana = IanaTransform(iana_config["IANA"])
-        
+
         for conn in self._dns_scores:
 
             timestamp = conn[self._conf["dns_score_fields"]["unix_tstamp"]]
@@ -319,11 +319,11 @@ class OA(object):
         """).format(self._db,self._table_name,year,month,day,dns_qry_name,hh,self._details_limit)
 
         try:
-             dns_details = impala.execute_query(query_to_load)
+            dns_details = impala.execute_query(query_to_load)
         except:
             self._logger.info("WARNING. Details couldn't be retreived for {0}, skipping this step".format(dns_qry_name))
         else:
-        # add IANA to results.
+            # add IANA to results.
             update_rows = []
             if dns_iana:
                 self._logger.info("Adding IANA translation to details results")
@@ -345,7 +345,7 @@ class OA(object):
                 value_string += str(tuple(item for item in row)) + ","
 
             if value_string != "":
-                
+
                 query_to_insert=("""
                     INSERT INTO {0}.dns_edge PARTITION (y={1}, m={2}, d={3}) VALUES ({4});
                 """).format(self._db,year, month, day,  value_string[:-1])
@@ -377,7 +377,7 @@ class OA(object):
 
             impala.execute_query(query_to_load)
 
-        
+
     def _ingest_summary(self):
         # get date parameters.
         yr = self._date[:4]
@@ -385,9 +385,9 @@ class OA(object):
         dy = self._date[6:]
 
         self._logger.info("Getting ingest summary data for the day")
-        
-        ingest_summary_cols = ["date","total"]		
-        result_rows = []        
+
+        ingest_summary_cols = ["date","total"]
+        result_rows = []
         df_filtered =  pd.DataFrame()
 
         query_to_load = ("""
@@ -403,10 +403,10 @@ class OA(object):
         df = pd.DataFrame(results)
 
         # Forms a new dataframe splitting the minutes from the time column
-        df_new = pd.DataFrame([["{0}-{1}-{2} {3}:{4}".format(yr, mn, dy,\
-            val['frame_time'].replace("  "," ").split(" ")[3].split(":")[0].zfill(2),\
-            val['frame_time'].replace("  "," ").split(" ")[3].split(":")[1].zfill(2)),\
-            int(val['total']) if not math.isnan(val['total']) else 0 ] for key,val in df.iterrows()],columns = ingest_summary_cols)
+        df_new = pd.DataFrame([["{0}-{1}-{2} {3}:{4}".format(yr, mn, dy, \
+                                                             val['frame_time'].replace("  "," ").split(" ")[3].split(":")[0].zfill(2), \
+                                                             val['frame_time'].replace("  "," ").split(" ")[3].split(":")[1].zfill(2)), \
+                                int(val['total']) if not math.isnan(val['total']) else 0 ] for key,val in df.iterrows()],columns = ingest_summary_cols)
 
         #Groups the data by minute
         sf = df_new.groupby(by=['date'])['total'].sum()

@@ -52,6 +52,19 @@ limit 25;
 
 
 ## spot-ml
+
+### Compiling and Building and Jar File
+From the spot-ml directory run:
+
+```
+sbt 'set test in Test := {}' clean compile assembly
+```
+
+If you're building this locally, and plan on pushing it to your cluster remotely, then run this:
+```
+scp target/scala-2.11/spot-ml-assembly-1.1.jar [host]:/path/to/incubator-spot/spot-ml/target/scala-2.11/
+```
+
 ### Running DNS and/or AD Analytics
 
 Ensure that you have data for the day you supply to `ml_ops_cdh.sh` and then run it. For example:
@@ -80,6 +93,9 @@ And for AD:
 python start_oa.py -d 20180105 -t ad -l 10
 ```
 To learn more about the options/switches for this CLI, use the --help flag.
+
+### Building the front-end
+Go through the steps in the `spot-oa/ui/README.md` and `spot-oa/ui/INSTALL.md` to build the front-end
 
 ### Starting the web server
 The web server can be started using 

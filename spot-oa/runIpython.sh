@@ -21,4 +21,5 @@ popd > /dev/null
 IPYTHONDIR="$SPOT_OA_DIR/ipython/"
 export IPYTHONDIR
 #ipython notebook --profile=spot > ipython.out 2>&1&
+export ACCESS_CONTROL_ALLOW_ORIGIN='*'
 ipython notebook --profile=spot

@@ -1,20 +1,20 @@
 INSERT INTO spot.event
-partition(p_dvc_vendor='alex', p_dvc_type='test', p_dt='2018-01-07')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-07')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
 VALUES (1518806042, 1518806042, 253, '1.1.1.1', '10.1.1.1', 'google.com', '0x00000001', 1, '0', 'sample answers');
 
 INSERT INTO spot.event
-partition(p_dvc_vendor='alex', p_dvc_type='test', p_dt='2018-01-07')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-07')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
 VALUES (1518806050, 1518806050, 212, '1.1.1.1', '10.1.1.2', 'google.com', '0x00000001', 1, '0', 'sample answers');
 
 INSERT INTO spot.event
-partition(p_dvc_vendor='alex', p_dvc_type='test', p_dt='2018-01-07')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-07')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
 VALUES (1518806042, 1518806052, 260, '1.1.1.1', '10.1.7.22', 'cnn.com', '0x00000001', 1, '0', 'sample answers');
 
 INSERT INTO spot.event
-partition(p_dvc_vendor='alex', p_dvc_type='test', p_dt='2018-01-07')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-07')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
 VALUES (1518806042, 1518806042, 243, '1.1.1.1', '10.1.32.255', 'amazon.com', '0x00000001', 1, '0', 'sample answers');
 

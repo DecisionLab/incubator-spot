@@ -24,8 +24,8 @@ DBNAME=spot
 HUSER=/user/spot
 NAME_NODE=cdh-dev-manage-01.internal.decisionlab.io
 WEB_PORT=50070
-DNS_PATH=${HUSER}/${DSOURCE}/hive/y=${YR}/m=${MH}/d=${DY}/
-PROXY_PATH=${HUSER}/${DSOURCE}/hive/y=${YR}/m=${MH}/d=${DY}/
+DNS_PATH=${HUSER}/odm/event/p_dvc_vendor=dl/p_dvc_type=testdns/p_dt=${YR}-${MH}-${DY}
+PROXY_PATH=${HUSER}/odm/event/p_dvc_vendor=dl/p_dvc_type=testproxy/p_dt=${YR}-${MH}-${DY}
 AD_PATH=${HUSER}/odm/event/p_dvc_vendor=Microsoft_AD/p_dvc_type=McAfee_SIEM/p_dt=${YR}-${MH}-${DY}*
 HPATH=${HUSER}/${DSOURCE}/scored_results/${FDATE}
 

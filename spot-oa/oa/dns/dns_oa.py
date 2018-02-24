@@ -244,7 +244,7 @@ class OA(object):
         for conn in self._dns_scores:
             conn[dns_date_index] = datetime.datetime.fromtimestamp(int(conn[dns_date_index])).strftime('%Y-%m-%d %H:%M:%S')
 
-        self._dns_scores = [conn + [ filter(None,conn[dns_date_index].split(" ")[1].split(":")[0])] for conn in self._dns_scores ]
+        self._dns_scores = [conn + [ filter(None,conn[dns_date_index].split(" ")[1].split(":")[1])] for conn in self._dns_scores ]
 
     def _add_iana(self):
         iana_conf_file = "{0}/components/iana/iana_config.json".format(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

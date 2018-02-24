@@ -1,0 +1,40 @@
+p_date              	string
+p_time              	string
+clientip            	string
+host                	string
+reqmethod           	string
+useragent           	string
+resconttype         	string
+duration            	int
+username            	string
+authgroup           	string
+exceptionid         	string
+filterresult        	string
+webcat              	string
+referer             	string
+respcode            	string
+action              	string
+urischeme           	string
+uriport             	string
+uripath             	string
+uriquery            	string
+uriextension        	string
+serverip            	string
+scbytes             	int
+csbytes             	int
+virusid             	string
+bcappname           	string
+bcappoper           	string
+fulluri             	string
+y                   	string
+m                   	string
+d                   	string
+h                   	string
+
+# Partition Information
+# col_name            	data_type           	comment
+
+y                   	string
+m                   	string
+d                   	string
+h                   	string

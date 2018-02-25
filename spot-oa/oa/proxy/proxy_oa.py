@@ -172,13 +172,28 @@ class OA(object):
         mn = self._date[4:6]
         dy = self._date[6:] 
         value_string = ""
- 
+
         for row in self._proxy_scores:
-            value_string += str(tuple(Util.cast_val(item) for item in row)) + ","              
+            time_index = self._conf["proxy_results_fields"]["p_time"]
+            time_epoc = int(row[time_index])
+            date, time = datetime.datetime.fromtimestamp(time_epoc).strftime('%Y-%m-%d %H:%M:%S').split(" ")
+            row[time_index] = time
+
+            duration_index = self._conf["proxy_results_fields"]["duration"]
+            try:
+                row[duration_index] = int(float(row[duration_index]))
+            except:
+                row[duration_index] = 1234
+
+            # do this last so it doesn't mess me up
+            row = [date] + row
+
+            value_string += str(tuple(Util.cast_val(item) for item in row)) + ","
     
         load_into_impala = ("""
-             INSERT INTO {0}.proxy_scores partition(y={2}, m={3}, d={4}) VALUES {1}
-        """).format(self._db, value_string[:-1], yr, mn, dy) 
+             INSERT INTO {0}.proxy_scores (tdate, time, clientip, host, reqmethod, useragent, resconttype, duration, username, webcat, referer, respcode, uriquery, scbytes, csbytes, fulluri, word, ml_score, uri_rep, respcode_name, network_context)   
+             partition(y={2}, m={3}, d={4}) VALUES {1}
+        """).format(self._db, value_string[:-1], yr, mn, dy)
         impala.execute_query(load_into_impala)
 
 

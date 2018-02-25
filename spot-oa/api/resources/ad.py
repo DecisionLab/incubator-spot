@@ -34,7 +34,7 @@ def suspicious_requests(date, ip, limit=250):
     proxy_query = ("""
 	SELECT * FROM {0}.ad_scores
 	WHERE ad_scores.y={1} AND ad_scores.m={2} AND ad_scores.d={3}
-	ORDER BY DESC score 
+	ORDER BY score DESC
 	LIMIT {4}
     """).format(db,date.year,date.month,date.day,limit)
 

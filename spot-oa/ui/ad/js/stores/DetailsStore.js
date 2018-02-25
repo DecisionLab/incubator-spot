@@ -39,7 +39,7 @@ class DetailsStore extends ObservableWithHeadersGraphQLStore {
             resconttype: 'MIME Type',
             referer: 'Referer',
             uriport: 'URI Port',
-            serverip: 'Proxy IP',
+            serverip: 'AD IP',
             scbytes: 'Server Bytes',
             csbytes: 'Client Bytes',
             fulluri: 'Full URI'

@@ -30,7 +30,7 @@ class NotebookStore extends ObservableWithHeadersGraphQLStore {
         this.selectedQuery = 'scoreQuery';
         this.query = {
           scoreQuery: `
-          mutation($input:[ProxyScoreInputType!]!) {
+          mutation($input:[ADScoreInputType!]!) {
             ad{
               score(input:$input)
                   {success}

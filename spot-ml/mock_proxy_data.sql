@@ -1,7 +1,7 @@
 INSERT INTO spot.event
-partition(p_dvc_vendor='dl', p_dvc_type='testproxy', p_dt='2018-01-08')
+partition(p_dvc_vendor='dl', p_dvc_type='testproxy', p_dt='2016-01-05')
 (event_time, src_ip4_str, prx_host, prx_method, prx_browser, prx_type, duration, user_name, prx_filter_result, prx_category, prx_referrer, prx_code, prx_action, prx_query, in_bytes, out_bytes, http_request_uri)
-VALUES (1518806042, '10.1.2.3', 'hsn.mpl.miisolutions.net', 'POST', 'Firefox', 'sample type', 2345, 'DL', 'sample filter result', 'Technology/Internet', 'sample referrer', '200', 'sample action', 'sample query', 10, 20, 'http://google.com?q=test');
+VALUES (1451970199, '10.1.2.3', 'hsn.mpl.miisolutions.net', 'POST', 'Firefox', 'sample type', 2345, 'DL', 'sample filter result', 'Technology/Internet', 'sample referrer', '200', 'sample action', 'sample query', 10, 20, 'http://google.com?q=test');
 
 -- N/A	  event_time	src_ip4_str	prx_host	prx_method	prx_browser	prx_type	  duration	user_name	N/A         N/A	          prx_filter_result	prx_category	prx_referrer	prx_code	prx_action	N/A	  		N/A     N/A     prx_query N/A           N/A       in_bytes  out_bytes N/A     N/A       N/A       http_request_uri
 -- p_date	p_time	    clientip	  host	    reqmethod	  useragent	  resconttype	duration	username  authgroup   exceptionid   filterresult      webcat        referer       respcode  action      urischeme uriport uripath uriquery  uriextension  serverip  scbytes   csbytes   virusid bcappname bcappoper fulluri

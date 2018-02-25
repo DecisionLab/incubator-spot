@@ -27,7 +27,7 @@ class IncidentProgressionStore extends ObservableGraphQLStore {
     getQuery() {
         return `
             query($date:SpotDateType!,$uri:String!) {
-                proxy {
+                ad {
                     threat {
                         incidentProgression(date:$date,uri:$uri) {
                             requests {
@@ -46,7 +46,7 @@ class IncidentProgressionStore extends ObservableGraphQLStore {
     }
 
     unboxData(data) {
-        return data.proxy.threat.incidentProgression;
+        return data.ad.threat.incidentProgression;
     }
 
     setDate(date) {

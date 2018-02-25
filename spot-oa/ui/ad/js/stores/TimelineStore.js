@@ -27,7 +27,7 @@ class TimelineStore extends ObservableGraphQLStore {
     getQuery() {
         return `
             query($date:SpotDateType!,$uri:String!) {
-                proxy {
+                ad {
                     threat {
                         timeline(date:$date, uri:$uri) {
                             duration
@@ -43,7 +43,7 @@ class TimelineStore extends ObservableGraphQLStore {
     }
 
     unboxData(data) {
-        return data.proxy.threat.timeline;
+        return data.ad.threat.timeline;
     }
 
     setDate(date) {

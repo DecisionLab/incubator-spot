@@ -57,7 +57,7 @@ ReactDOM.render(
   <div id="spot-content">
     <PanelRow maximized>
       <Panel title={ipynbClosure.getTitle()} container className="col-md-12">
-        <IPythonNotebookPanel title={ipynbClosure.getTitle()} date={SpotUtils.getCurrentDate()} ipynb="proxy/${date}/Advanced_Mode.ipynb" ipython="NoIpythonNotebooks"/>
+        <IPythonNotebookPanel title={ipynbClosure.getTitle()} date={SpotUtils.getCurrentDate()} ipynb="ad/${date}/Advanced_Mode.ipynb" ipython="NoIpythonNotebooks"/>
       </Panel>
     </PanelRow>
   </div>,

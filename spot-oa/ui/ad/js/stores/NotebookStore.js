@@ -31,14 +31,14 @@ class NotebookStore extends ObservableWithHeadersGraphQLStore {
         this.query = {
           scoreQuery: `
           mutation($input:[ProxyScoreInputType!]!) {
-            proxy{
+            ad{
               score(input:$input)
                   {success}
             }
           }`,
           resetQuery: `
           mutation($date:SpotDateType!) {
-                  proxy{
+                  ad{
                       resetScoredConnections(date:$date){
                       success
                   }

@@ -26,7 +26,7 @@ class CommentsStore extends ObservableGraphQLStore {
     getQuery() {
         return `
             query($date:SpotDateType!) {
-                proxy {
+                ad {
                     threats {
                         comments(date:$date) {
                             uri
@@ -40,7 +40,7 @@ class CommentsStore extends ObservableGraphQLStore {
     }
 
     unboxData(data) {
-        return data.proxy.threats.comments;
+        return data.ad.threats.comments;
     }
 
     setDate(date) {

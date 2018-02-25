@@ -51,7 +51,7 @@ class DetailsStore extends ObservableWithHeadersGraphQLStore {
     getQuery() {
         return `
             query($date:SpotDateType!,$uri:String!,$clientIp:SpotIpType!) {
-                proxy {
+                ad {
                     edgeDetails(date:$date,uri:$uri,clientIp:$clientIp) {
                         uriport: uriPort
                         webcat: webCategory
@@ -75,7 +75,7 @@ class DetailsStore extends ObservableWithHeadersGraphQLStore {
     }
 
     unboxData(data) {
-        return data.proxy.edgeDetails;
+        return data.ad.edgeDetails;
     }
 
     setDate(date) {

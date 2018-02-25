@@ -118,7 +118,7 @@ var NetworkViewPanel = React.createClass({
         this.link.exit().remove();
 
         // Update nodesw
-        this.node = this.canvas.selectAll('.node, .proxy_node')
+        this.node = this.canvas.selectAll('.node, .ad_node')
             .data(nodes.filter((node) => node.visible), function(d) { return d.id; });
 
         this.node.transition().select('circle')
@@ -146,7 +146,7 @@ var NetworkViewPanel = React.createClass({
         nodeEnter
             .attr('class', d => SpotUtils.CSS_RISK_CLASSES[d.rep])
             .classed('node', d => !d.root)
-            .classed('proxy_node', d => d.root)
+            .classed('ad_node', d => d.root)
             .classed('blink_me', d => ids.indexOf(d.id)>-1)
             .classed('leaf', d => !d.children)
             .on("dblclick", this.onNodeDblClick)
@@ -271,8 +271,8 @@ var NetworkViewPanel = React.createClass({
         if (!state.loading && state.data)
         {
             data = {
-                id: 'spot_proxy',
-                name: 'Proxy',
+                id: 'spot_ad',
+                name: 'AD',
                 type: 'Root',
                 tooltip: 'Double click to toggle child nodes',
                 rep: -1,

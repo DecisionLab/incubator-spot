@@ -101,8 +101,7 @@ object ProxySuspiciousConnectsModel {
     3.0, 3.3, 3.6, 3.9, 4.2,
     4.5, 4.8, 5.1, 5.4, Double.PositiveInfinity)
 
-  val ModelSchema = StructType(List(DateField,
-    TimeField,
+  val ModelSchema = StructType(List(TimeField,
     ClientIPField,
     HostField,
     ReqMethodField,
@@ -181,7 +180,7 @@ object ProxySuspiciousConnectsModel {
 
 
     logger.info("Read source data")
-    val selectedRecords = inputRecords.select(Date, Time, ClientIP, Host, ReqMethod, UserAgent, ResponseContentType, RespCode, FullURI)
+    val selectedRecords = inputRecords.select(Time, ClientIP, Host, ReqMethod, UserAgent, ResponseContentType, RespCode, FullURI)
 
     val wc = ipWordCountFromDF(sparkSession, selectedRecords, agentToCount)
     logger.info("proxy pre LDA completed")

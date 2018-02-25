@@ -40,8 +40,7 @@ object ProxyFeedback {
 
 
     val feedbackSchema = StructType(
-      List(StructField(Date, StringType, nullable = true),
-        StructField(Time, StringType, nullable = true),
+      List(StructField(Time, StringType, nullable = true),
         StructField(ClientIP, StringType, nullable = true),
         StructField(Host, StringType, nullable = true),
         StructField(ReqMethod, StringType, nullable = true),
@@ -78,7 +77,7 @@ object ProxyFeedback {
           row(respCodeIndex),
           row(fullURIIndex))))
         .flatMap(row => List.fill(duplicationFactor)(row)), feedbackSchema)
-        .select(Date, Time, ClientIP, Host, ReqMethod, UserAgent, ResponseContentType, RespCode, FullURI)
+        .select(Time, ClientIP, Host, ReqMethod, UserAgent, ResponseContentType, RespCode, FullURI)
     } else {
       sparkSession.createDataFrame(sparkSession.sparkContext.emptyRDD[Row], feedbackSchema)
     }

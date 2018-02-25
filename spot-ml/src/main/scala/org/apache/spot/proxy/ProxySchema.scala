@@ -26,77 +26,77 @@ object ProxySchema {
 
   // fields from the input
 
-  val Date = "p_date"
-  val DateField = StructField(Date, StringType, nullable = true)
+//  val Date = "p_date"
+//  val DateField = StructField(Date, StringType, nullable = true)
 
-  val Time = "p_time"
-  val TimeField = StructField(Time, StringType, nullable = true)
+  val Time = "event_time"
+  val TimeField = StructField(Time, LongType, nullable = true)
 
-  val ClientIP = "clientip"
+  val ClientIP = "src_ip4_str"
   val ClientIPField = StructField(ClientIP, StringType, nullable = true)
 
-  val Host = "host"
+  val Host = "prx_host"
   val HostField = StructField(Host, StringType, nullable = true)
 
-  val ReqMethod = "reqmethod"
+  val ReqMethod = "prx_method"
   val ReqMethodField = StructField(ReqMethod, StringType, nullable = true)
 
-  val UserAgent = "useragent"
+  val UserAgent = "prx_browser"
   val UserAgentField = StructField(UserAgent, StringType, nullable = true)
 
-  val ResponseContentType = "resconttype"
+  val ResponseContentType = "prx_type"
   val ResponseContentTypeField = StructField(ResponseContentType, StringType, nullable = true)
 
   val Duration = "duration"
   val DurationField = StructField(Duration, IntegerType, nullable = true)
 
-  val UserName = "username"
+  val UserName = "user_name"
   val UserNameField = StructField(UserName, StringType, nullable = true)
 
-  val AuthGroup = "authgroup"
+//  val AuthGroup = "authgroup"
 
-  val ExceptionId = "exceptionid"
+//  val ExceptionId = "exceptionid"
 
-  val FilterResult = "filterresult"
+  val FilterResult = "prx_filter_result"
 
-  val WebCat = "webcat"
+  val WebCat = "prx_category"
   val WebCatField = StructField(WebCat, StringType, nullable = true)
 
-  val Referer = "referer"
+  val Referer = "prx_referrer"
   val RefererField = StructField(Referer, StringType, nullable = true)
 
-  val RespCode = "respcode"
+  val RespCode = "prx_code"
   val RespCodeField = StructField(RespCode, StringType, nullable = true)
 
-  val Action = "action"
+  val Action = "prx_action"
 
-  val URIScheme = "urischeme"
+//  val URIScheme = "urischeme"
 
-  val URIPort = "uriport"
-  val URIPortField = StructField(URIPort, StringType, nullable = true)
+//  val URIPort = "uriport"
+//  val URIPortField = StructField(URIPort, StringType, nullable = true)
 
-  val URIPath = "uripath"
-  val URIPathField = StructField(URIPath, StringType, nullable = true)
+//  val URIPath = "uripath"
+//  val URIPathField = StructField(URIPath, StringType, nullable = true)
 
-  val URIQuery = "uriquery"
+  val URIQuery = "prx_query"
   val URIQueryField = StructField(URIQuery, StringType, nullable = true)
 
-  val URIExtension = "uriextension"
+//  val URIExtension = "uriextension"
 
-  val ServerIP = "serverip"
-  val ServerIPField = StructField(ServerIP, StringType, nullable = true)
+//  val ServerIP = "serverip"
+//  val ServerIPField = StructField(ServerIP, StringType, nullable = true)
 
-  val SCBytes = "scbytes"
+  val SCBytes = "in_bytes"
   val SCBytesField = StructField(SCBytes, IntegerType, nullable = true)
 
-  val CSBytes = "csbytes"
+  val CSBytes = "out_bytes"
   val CSBytesField = StructField(CSBytes, IntegerType, nullable = true)
 
-  val VirusID = "virusid"
-  val BcappName = "bcappname"
-  val BcappOper = "bcappoper"
+//  val VirusID = "virusid"
+//  val BcappName = "bcappname"
+//  val BcappOper = "bcappoper"
 
-  val FullURI = "fulluri"
+  val FullURI = "http_request_uri"
   val FullURIField = StructField(FullURI, StringType, nullable = true)
 
   // output fields

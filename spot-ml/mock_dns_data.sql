@@ -1,22 +1,22 @@
 INSERT INTO spot.event
-partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2016-01-05')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-05')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
-VALUES (1451970000, 1451970000, 253, '1.1.1.1', '10.1.1.1', 'google.com', '0x00000001', 1, '0', 'sample answers');
+VALUES (1515128500, 1515128400, 253, '1.1.1.1', '10.1.1.1', 'google.com', '0x00000001', 1, '0', 'sample answers');
 
 INSERT INTO spot.event
-partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2016-01-05')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-05')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
-VALUES (1451970010, 1451970010, 212, '1.1.1.1', '10.1.1.2', 'google.com', '0x00000001', 1, '0', 'sample answers');
+VALUES (1515128450, 1515128450, 212, '1.1.1.1', '10.1.1.2', 'google.com', '0x00000001', 1, '0', 'sample answers');
 
 INSERT INTO spot.event
-partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2016-01-05')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-05')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
-VALUES (1451970100, 1451970100, 260, '1.1.1.1', '10.1.7.22', 'cnn.com', '0x00000001', 1, '0', 'sample answers');
+VALUES (1515128420, 1515128420, 260, '1.1.1.1', '10.1.7.22', 'cnn.com', '0x00000001', 1, '0', 'sample answers');
 
 INSERT INTO spot.event
-partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2016-01-05')
+partition(p_dvc_vendor='dl', p_dvc_type='testdns', p_dt='2018-01-05')
 (begin_time, event_time, dns_len, dst_ip4_str, src_ip4_str, dns_query, dns_class, dns_type, dns_response_code, dns_answers)
-VALUES (1451970009, 1451970009, 243, '1.1.1.1', '10.1.32.255', 'amazon.com', '0x00000001', 1, '0', 'sample answers');
+VALUES (1515128490, 1515128490, 243, '1.1.1.1', '10.1.32.255', 'amazon.com', '0x00000001', 1, '0', 'sample answers');
 
 -- NOTE: SAMPLE ata pulled from spot docker
 -- frame_time,frame_len,ip_dst,dns_qry_name,dns_qry_class,dns_qry_type,dns_qry_rcode,domain,subdomain,subdomain_length,num_periods,subdomain_entropy,top_domain,word,score,query_rep,hh,ip_sev,dns_sev,dns_qry_class_name,dns_qry_type_name,dns_qry_rcode_name,network_context,unix_tstamp

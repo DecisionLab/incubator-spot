@@ -35,8 +35,7 @@ object ProxySuspiciousConnectsAnalysis {
   val DefaultUserAgent = "-"
   val DefaultResponseContentType = "-"
   val InSchema = StructType(
-    List(DateField,
-      TimeField,
+    List(TimeField,
       ClientIPField,
       HostField,
       ReqMethodField,
@@ -47,16 +46,12 @@ object ProxySuspiciousConnectsAnalysis {
       WebCatField,
       RefererField,
       RespCodeField,
-      URIPortField,
-      URIPathField,
       URIQueryField,
-      ServerIPField,
       SCBytesField,
       CSBytesField,
       FullURIField)).fieldNames.map(col)
   val OutSchema = StructType(
-    List(DateField,
-      TimeField,
+    List(TimeField,
       ClientIPField,
       HostField,
       ReqMethodField,
@@ -67,10 +62,7 @@ object ProxySuspiciousConnectsAnalysis {
       WebCatField,
       RefererField,
       RespCodeField,
-      URIPortField,
-      URIPathField,
       URIQueryField,
-      ServerIPField,
       SCBytesField,
       CSBytesField,
       FullURIField,
@@ -134,8 +126,7 @@ object ProxySuspiciousConnectsAnalysis {
     */
   def filterRecords(inputProxyRecords: DataFrame): DataFrame = {
 
-    val cleanProxyRecordsFilter = inputProxyRecords(Date).isNotNull &&
-      inputProxyRecords(Time).isNotNull &&
+    val cleanProxyRecordsFilter = inputProxyRecords(Time).isNotNull &&
       inputProxyRecords(ClientIP).isNotNull &&
       inputProxyRecords(Host).isNotNull &&
       inputProxyRecords(FullURI).isNotNull
@@ -151,8 +142,7 @@ object ProxySuspiciousConnectsAnalysis {
     */
   def filterInvalidRecords(inputProxyRecords: DataFrame): DataFrame = {
 
-    val invalidProxyRecordsFilter = inputProxyRecords(Date).isNull ||
-      inputProxyRecords(Time).isNull ||
+    val invalidProxyRecordsFilter = inputProxyRecords(Time).isNull ||
       inputProxyRecords(ClientIP).isNull ||
       inputProxyRecords(Host).isNull ||
       inputProxyRecords(FullURI).isNull

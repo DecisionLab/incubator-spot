@@ -21,7 +21,7 @@ import json
 import shutil
 import sys
 import datetime
-import csv, math 
+import csv, math
 from collections import OrderedDict
 from utils import Util
 from components.data.data import Data
@@ -31,7 +31,7 @@ from components.nc.network_context import NetworkContext
 import api.resources.hdfs_client as HDFSClient
 import api.resources.impala_engine as impala
 from multiprocessing import Process
-import pandas as pd 
+import pandas as pd
 from impala.util import as_pandas
 
 import time
@@ -81,12 +81,12 @@ class OA(object):
         ####################
 
         self._create_folder_structure()
-        self._clear_previous_executions()   
+        self._clear_previous_executions()
         self._add_ipynb()
         self._get_proxy_results()
-        self._add_reputation() 
+        self._add_reputation()
         self._add_iana()
-        self._add_network_context() 
+        self._add_network_context()
         self._create_proxy_scores_csv()
         self._get_oa_details()
         self._ingest_summary()
@@ -105,17 +105,17 @@ class OA(object):
 
 
     def _clear_previous_executions(self):
-        
-        self._logger.info("Cleaning data from previous executions for the day")       
+
+        self._logger.info("Cleaning data from previous executions for the day")
         yr = self._date[:4]
         mn = self._date[4:6]
-        dy = self._date[6:]  
+        dy = self._date[6:]
         table_schema = []
         HUSER = self._spot_conf.get('conf', 'HUSER').replace("'", "").replace('"', '')
-        table_schema=['suspicious', 'edge','threat_investigation', 'timeline', 'storyboard', 'summary' ] 
+        table_schema=['suspicious', 'edge','threat_investigation', 'timeline', 'storyboard', 'summary' ]
 
         for path in table_schema:
-            HDFSClient.delete_folder("{0}/{1}/hive/oa/{2}/y={3}/m={4}/d={5}".format(HUSER,self._table_name,path,yr,int(mn),int(dy)),user="impala")        
+            HDFSClient.delete_folder("{0}/{1}/hive/oa/{2}/y={3}/m={4}/d={5}".format(HUSER,self._table_name,path,yr,int(mn),int(dy)),user="impala")
         impala.execute_query("invalidate metadata")
 
         #removes Feedback file
@@ -152,7 +152,7 @@ class OA(object):
         get_command = Util.get_ml_results_form_hdfs(hdfs_path,self._data_path)
         self._logger.info("{0}".format(get_command))
 
-         # valdiate files exists
+        # valdiate files exists
         if os.path.isfile(proxy_results):
 
             # read number of results based in the limit specified.
@@ -170,10 +170,15 @@ class OA(object):
         # get date parameters.
         yr = self._date[:4]
         mn = self._date[4:6]
-        dy = self._date[6:] 
+        dy = self._date[6:]
         value_string = ""
 
-        for row in self._proxy_scores:
+        i = 0
+        rows = len(self._proxy_scores)
+
+        while i < rows:
+            row = self._proxy_scores[i]
+
             time_index = self._conf["proxy_results_fields"]["p_time"]
             time_epoc = int(row[time_index])
             date, time = datetime.datetime.fromtimestamp(time_epoc).strftime('%Y-%m-%d %H:%M:%S').split(" ")
@@ -187,9 +192,12 @@ class OA(object):
 
             # do this last so it doesn't mess me up
             row = [date] + row
+            self._proxy_scores[i] = row
+            i+=1
 
+        for row in self._proxy_scores:
             value_string += str(tuple(Util.cast_val(item) for item in row)) + ","
-    
+
         load_into_impala = ("""
              INSERT INTO {0}.proxy_scores (tdate, time, clientip, host, reqmethod, useragent, resconttype, duration, username, webcat, referer, respcode, uriquery, scbytes, csbytes, fulluri, word, ml_score, uri_rep, respcode_name, network_context)   
              partition(y={2}, m={3}, d={4}) VALUES {1}
@@ -208,9 +216,9 @@ class OA(object):
         self._rep_services = []
         self._logger.info("Initializing reputation services.")
         for service in rep_conf:
-             config = rep_conf[service]
-             module = __import__("components.reputation.{0}.{0}".format(service), fromlist=['Reputation'])
-             self._rep_services.append(module.Reputation(config,self._logger))
+            config = rep_conf[service]
+            module = __import__("components.reputation.{0}.{0}".format(service), fromlist=['Reputation'])
+            self._rep_services.append(module.Reputation(config,self._logger))
 
         # get columns for reputation.
         rep_cols = {}
@@ -260,7 +268,7 @@ class OA(object):
             nc_conf = json.loads(open(nc_conf_file).read())["NC"]
             proxy_nc = NetworkContext(nc_conf,self._logger)
             ip_dst_index = self._conf["proxy_score_fields"]["clientip"]
-            self._proxy_scores = [ conn + [proxy_nc.get_nc(conn[ip_dst_index])] for conn in self._proxy_scores ] 
+            self._proxy_scores = [ conn + [proxy_nc.get_nc(conn[ip_dst_index])] for conn in self._proxy_scores ]
         else:
             self._proxy_scores = [ conn + [""] for conn in self._proxy_scores ]
 
@@ -271,7 +279,7 @@ class OA(object):
         # start suspicious connects details process.
         p_sp = Process(target=self._get_suspicious_details)
         p_sp.start()
- 
+
 
     def _get_suspicious_details(self):
         uri_list = []
@@ -293,48 +301,52 @@ class OA(object):
 
 
     def _get_proxy_details(self,fulluri,clientip,year,month,day,hh,proxy_iana):
-        limit = 250 
+        limit = 250
         value_string = ""
-        
+
         query_to_load =("""
-            SELECT p_date, p_time, clientip, host, webcat, respcode, reqmethod, useragent, resconttype,
-            referer, uriport, serverip, scbytes, csbytes, fulluri, {5} as hh
-            FROM {0}.{1} WHERE y='{2}' AND m='{3}' AND d='{4}' AND
-            h='{5}' AND fulluri='{6}' AND clientip='{7}' LIMIT {8};
-        """).format(self._db,self._table_name, year,month,day,hh,fulluri.replace("'","\\'"),clientip,limit)
+            SELECT tdate, time, clientip, host, webcat, respcode, reqmethod, useragent, resconttype,
+            referer, uriport, serverip, scbytes, csbytes, fulluri, {4} as hh
+            FROM {0}.proxy_scores WHERE y={1} AND m={2} AND d={3} AND fulluri='{5}' AND clientip='{6}' 
+	    LIMIT {7};
+        """).format(self._db,year,month,day,hh,fulluri.replace("'","\\'"),clientip,limit)
 
         detail_results = impala.execute_query(query_to_load)
- 
+
         if proxy_iana:
-             # add IANA to results.
+            # add IANA to results.
             self._logger.info("Adding IANA translation to details results")
- 
+
             updated_rows = [conn + (proxy_iana.get_name(conn[5],"proxy_http_rcode"),) for conn in detail_results]
-            updated_rows = filter(None, updated_rows)            
+            updated_rows = filter(None, updated_rows)
         else:
             updated_rows = [conn + ("") for conn in detail_results ]
- 
+
         for row in updated_rows:
-            value_string += str(tuple(item for item in row)) + ","     
-        
-        if value_string != "":  
+            lst = list(row)
+            lst[5] = str(row[5])
+            t = tuple(lst)
+            value_string += str(tuple(item for item in t)) + ","
+
+        if value_string != "":
             query_to_insert=("""
                 INSERT INTO {0}.proxy_edge PARTITION (y={1}, m={2}, d={3}) VALUES ({4});
             """).format(self._db,year, month, day, value_string[:-1])
 
-            impala.execute_query(query_to_insert) 
- 
+            query_to_insert = query_to_insert.replace("None", "NULL")
+            impala.execute_query(query_to_insert)
 
-    def _ingest_summary(self): 
+
+    def _ingest_summary(self):
         # get date parameters.
         yr = self._date[:4]
         mn = self._date[4:6]
         dy = self._date[6:]
 
         self._logger.info("Getting ingest summary data for the day")
-        
-        ingest_summary_cols = ["date","total"]		
-        result_rows = []        
+
+        ingest_summary_cols = ["date","total"]
+        result_rows = []
         df_filtered =  pd.DataFrame()
 
         # get ingest summary.
@@ -347,26 +359,27 @@ class OA(object):
                 AND host IS NOT NULL AND fulluri IS NOT NULL
                 GROUP BY p_date, p_time;
         """).format(self._db,self._table_name, yr, mn, dy)
-        
-        results = impala.execute_query(query_to_load) 
- 
+
+        results = impala.execute_query(query_to_load)
+
         if results:
             df_results = as_pandas(results)
             #Forms a new dataframe splitting the minutes from the time column/
             df_new = pd.DataFrame([["{0} {1}:{2}".format(val['p_date'], val['p_time'].split(":")[0].zfill(2), val['p_time'].split(":")[1].zfill(2)), int(val['total']) if not math.isnan(val['total']) else 0 ] for key,val in df_results.iterrows()],columns = ingest_summary_cols)
             value_string = ''
-            #Groups the data by minute 
+            #Groups the data by minute
             sf = df_new.groupby(by=['date'])['total'].sum()
             df_per_min = pd.DataFrame({'date':sf.index, 'total':sf.values})
-            
-            df_final = df_filtered.append(df_per_min, ignore_index=True).to_records(False,False) 
+
+            df_final = df_filtered.append(df_per_min, ignore_index=True).to_records(False,False)
             if len(df_final) > 0:
                 query_to_insert=("""
                     INSERT INTO {0}.proxy_ingest_summary PARTITION (y={1}, m={2}, d={3}) VALUES {4};
                 """).format(self._db, yr, mn, dy, tuple(df_final))
 
-                impala.execute_query(query_to_insert) 
-                
+                impala.execute_query(query_to_insert)
+
         else:
             self._logger.info("No data found for the ingest summary")
-        
+
+

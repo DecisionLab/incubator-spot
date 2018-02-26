@@ -16,7 +16,7 @@ VALUES (1515128700, '10.1.6.6', 'amazon.com', 'GET', 'Firefox', 'sample type', 2
 INSERT INTO spot.event
 partition(p_dvc_vendor='dl', p_dvc_type='testproxy', p_dt='2018-01-05')
 (event_time, src_ip4_str, prx_host, prx_method, prx_browser, prx_type, duration, user_name, prx_filter_result, prx_category, prx_referrer, prx_code, prx_action, prx_query, in_bytes, out_bytes, http_request_uri)
-VALUES (1515128800, '10.1..7', 'facebook.com', 'PUT', 'Firefox', 'sample type', 2345, 'DL', 'sample filter result', 'Technology/Internet', 'sample referrer', '500', 'sample action', 'sample query', 10, 20, 'http://facebook.com');
+VALUES (1515128800, '10.1.1.7', 'facebook.com', 'PUT', 'Firefox', 'sample type', 2345, 'DL', 'sample filter result', 'Technology/Internet', 'sample referrer', '500', 'sample action', 'sample query', 10, 20, 'http://facebook.com');
 
 
 # INSERT INTO spot.event

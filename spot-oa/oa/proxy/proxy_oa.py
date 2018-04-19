@@ -165,6 +165,14 @@ class OA(object):
 
         self._proxy_scores = self._proxy_results[:]
 
+    def trim_rows(self, row):
+        if row[4].endswith('KHTML') and row[5].startswith(' like Gecko'):
+            row[4] = row[4] + row[5]
+            del row[5]
+        else:
+            row[8] = row[8] + ' ' + row[9]
+            del row[8]
+        return row
 
     def _create_proxy_scores_csv(self):
         # get date parameters.
@@ -175,9 +183,18 @@ class OA(object):
 
         i = 0
         rows = len(self._proxy_scores)
+        bad_rows = []
+        row_size = 20
 
         while i < rows:
             row = self._proxy_scores[i]
+            if not row_size == len(row):
+                 while len(row) > row_size:
+                    row = self.trim_rows(row)
+
+            #Force unknown response codes to exist
+            if row[10] == 'null':
+                row[10] = 500
 
             time_index = self._conf["proxy_results_fields"]["p_time"]
             time_epoc = int(row[time_index])
@@ -190,18 +207,30 @@ class OA(object):
             except:
                 row[duration_index] = 1234
 
+            #Indicies that should be ints
+            int_indicies = [10,12,13]
+            for x in range(0, len(row)):
+                if x in int_indicies:
+                    try:
+                        row[x] = int(row[x])
+                    except ValueError:
+                        bad_rows.append(i)
+
+            if 'video/MP2T' in row[5]:
+                bad_rows.append(i)
+
             # do this last so it doesn't mess me up
             row = [date] + row
             self._proxy_scores[i] = row
             i+=1
 
+        for index in reversed(bad_rows):
+            del self._proxy_scores[index]
+
         for row in self._proxy_scores:
             value_string += str(tuple(Util.cast_val(item) for item in row)) + ","
 
-        load_into_impala = ("""
-             INSERT INTO {0}.proxy_scores (tdate, time, clientip, host, reqmethod, useragent, resconttype, duration, username, webcat, referer, respcode, uriquery, scbytes, csbytes, fulluri, word, ml_score, uri_rep, respcode_name, network_context)   
-             partition(y={2}, m={3}, d={4}) VALUES {1}
-        """).format(self._db, value_string[:-1], yr, mn, dy)
+        load_into_impala = (""" INSERT INTO {0}.proxy_scores (tdate, time, clientip, host, reqmethod, useragent, resconttype, duration, username, webcat, referer, respcode, uriquery, scbytes, csbytes, fulluri, word, ml_score, uri_rep, respcode_name, network_context)   partition(y={2}, m={3}, d={4}) VALUES {1} """).format(self._db, value_string[:-1], yr, mn, dy)
         impala.execute_query(load_into_impala)
 
 
@@ -315,7 +344,7 @@ class OA(object):
 
         if proxy_iana:
             # add IANA to results.
-            self._logger.info("Adding IANA translation to details results")
+            self._logger.debug("Adding IANA translation to details results")
 
             updated_rows = [conn + (proxy_iana.get_name(conn[5],"proxy_http_rcode"),) for conn in detail_results]
             updated_rows = filter(None, updated_rows)

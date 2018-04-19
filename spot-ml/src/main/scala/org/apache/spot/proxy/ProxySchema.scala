@@ -29,7 +29,7 @@ object ProxySchema {
 //  val Date = "p_date"
 //  val DateField = StructField(Date, StringType, nullable = true)
 
-  val Time = "event_time"
+  val Time = "event_insert_time"
   val TimeField = StructField(Time, LongType, nullable = true)
 
   val ClientIP = "src_ip4_str"

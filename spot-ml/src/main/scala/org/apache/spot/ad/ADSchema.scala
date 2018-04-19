@@ -57,10 +57,10 @@ object ADSchema {
   val ActionField = StructField(Action, StringType, nullable= true)
 
 
-  val BeginTime = "begintime"
+  val BeginTime = "begin_time"
   val BeginTimeField = StructField(BeginTime, LongType, nullable= true)
 
-  val EndTime = "endtime"
+  val EndTime = "end_time"
   val EndTimeField = StructField(EndTime, LongType, nullable= true)
 
 

@@ -17,10 +17,10 @@ def main():
         start_date = datetime.datetime.strptime(start_date_stamp,"%Y%m%d")
         end_date = datetime.datetime.strptime(sys.argv[3], "%Y%m%d")
         delta = end_date - start_date
-        for x in range (0, delta.days + 1):
+        for x in range (0, delta.days):
             date_to_run = start_date + datetime.timedelta(days=x)
             new_datestamp = date_to_run.strftime("%Y%m%d")
-            run_process(new_datestamp, ml_type) 
+            run_process(new_datestamp, ml_type)
 
     else:
         run_process(start_date_stamp, ml_type)

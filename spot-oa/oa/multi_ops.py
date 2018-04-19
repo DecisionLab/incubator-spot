@@ -19,13 +19,12 @@ def main():
         end_date = datetime.datetime.strptime(sys.argv[4], "%Y%m%d")
         delta = end_date - start_date
         for x in range (0, delta.days):
-            print x
             date_to_run = start_date + datetime.timedelta(days=x)
             new_datestamp = date_to_run.strftime("%Y%m%d")
-            run_process(new_datestamp, ml_type, tolerance) 
+            run_process(new_datestamp, ml_type, tolerance)
     else:
          run_process(start_date_stamp, ml_type, tolerance)
-        
+
 
 if __name__ == '__main__':
     main()

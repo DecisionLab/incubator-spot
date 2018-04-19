@@ -230,7 +230,10 @@ class OA(object):
         for row in self._proxy_scores:
             value_string += str(tuple(Util.cast_val(item) for item in row)) + ","
 
-        load_into_impala = (""" INSERT INTO {0}.proxy_scores (tdate, time, clientip, host, reqmethod, useragent, resconttype, duration, username, webcat, referer, respcode, uriquery, scbytes, csbytes, fulluri, word, ml_score, uri_rep, respcode_name, network_context)   partition(y={2}, m={3}, d={4}) VALUES {1} """).format(self._db, value_string[:-1], yr, mn, dy)
+        load_into_impala = ("""
+             INSERT INTO {0}.proxy_scores (tdate, time, clientip, host, reqmethod, useragent, resconttype, duration, username, webcat, referer, respcode, uriquery, scbytes, csbytes, fulluri, word, ml_score, uri_rep, respcode_name, network_context)   
+             partition(y={2}, m={3}, d={4}) VALUES {1}
+        """).format(self._db, value_string[:-1], yr, mn, dy)
         impala.execute_query(load_into_impala)
 
 

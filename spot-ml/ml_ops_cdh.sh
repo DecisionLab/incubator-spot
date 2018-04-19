@@ -107,7 +107,7 @@ spark2-submit --class "org.apache.spot.SuspiciousConnects" \
   --scored ${HDFS_SCORED_CONNECTS} \
   --threshold ${TOL} \
   --maxresults ${MAXRESULTS} \
-  --ldamaxiterations 5 \
+  --ldamaxiterations 2 \
   --ldaalpha ${LDA_ALPHA} \
   --ldabeta ${LDA_BETA} \
   --precision ${PRECISION} \

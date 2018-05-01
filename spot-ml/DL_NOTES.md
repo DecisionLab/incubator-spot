@@ -1,11 +1,12 @@
-# TODO
-1. clean up the ml ops cdh
-2. clean up or remove the cdh spot.conf file
-3. consider making he input reader support both parquet and avro, so existing spot functionality still works
+# ml_ops_cdh.sh
 
-# DEPLOYMENT
-1. when running /opt/spot/incubator-spot/spot-oa/runIpython.sh it errors due to lacking env var ACCESS_CONTROL_ALLOW_ORIGIN
-   Export manually (set to '*') since we have no clue why it's not there... sadface
+ml_ops_cdh.sh is a customized version of the ml_ops.sh script that operates on the ODM formatted data. This is the operator used in this project, and the original has been retained for use if non-ODM data is ingested.
+
+# Run the previous day's data
+Proxy:
+DATE=`date +%Y%m%d -d "yesterday" `; cd /opt/spot/incubator-spot/spot-ml; /opt/spot/incubator-spot/spot-ml/ml_ops_cdh.sh $DATE proxy
+AD:
+DATE=`date +%Y%m%d -d "yesterday" `; cd /opt/spot/incubator-spot/spot-ml; /opt/spot/incubator-spot/spot-ml/ml_ops_cdh.sh $DATE ad
 
 # Sample Data
 https://issues.apache.org/jira/browse/SPOT-135?jql=project%20%3D%20SPOT

@@ -37,7 +37,7 @@ ml_ops.sh expects data to be in particular locations. The environment variable `
 Ingesting data with the Spot ingestion tools (and a shared /etc/spot.conf file) will save data in these locations.
 
 
-### Run a suspicious connects analysis
+### Run a suspicious connects analysis with non-ODM data
 
 To run a suspicious connects analysis, execute the  `ml_ops.sh` script in the ml directory of the MLNODE.
 ```
@@ -48,6 +48,26 @@ To run a suspicious connects analysis, execute the  `ml_ops.sh` script in the ml
 For example:  
 ```
 ./ml_ops.sh 19731231 flow 1e-20 200
+```
+
+You should have a list of the 200 most suspicious flow events from 
+
+     $HPATH/flow/scored_results/YYYYMMDD/scores/flow_results.csv
+
+
+It is a csv file in which network events annotated with estimated probabilities and sorted in ascending order.
+
+### Run a suspicious connects analysis on ODM data
+
+To run a suspicious connects analysis, execute the  `ml_ops.sh` script in the ml directory of the MLNODE.
+```
+./ml_ops_cdh.sh YYYMMDD <type> <suspicion threshold> <max results returned>
+```
+
+
+For example:  
+```
+./ml_ops_cdh.sh 19731231 flow 1e-20 200
 ```
 
 You should have a list of the 200 most suspicious flow events from 
